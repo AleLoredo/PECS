@@ -124,8 +124,9 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                     </svg>
                 </button>
-                <h1 class="text-2xl font-bold">Fase 1</h1>
-                <div class="w-7 h-7"></div> </header>
+                <h1 class="text-2xl font-bold">Fase N</h1>
+                <div class="w-7 h-7"></div> 
+            </header>
             <main class="flex-grow flex justify-center items-start pt-4 pb-4 sm:pt-6 sm:pb-6" style="padding-left: calc(100vw / 30); padding-right: calc(100vw / 30);">
                 <div class="flex w-full h-[90vh]" style="gap: calc(100vw / 60);">
                     <div id="fase1-col1" class="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-y-auto p-3 space-y-4" style="width: 30vw; height: 100%;">
@@ -150,48 +151,97 @@
 
     <div id="options-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40 transition-opacity duration-300"></div>
     <div id="options-menu" class="fixed top-0 left-0 w-72 sm:w-80 h-full bg-white dark:bg-gray-800 shadow-xl p-6 transform -translate-x-full transition-transform duration-300 ease-in-out z-50 flex flex-col">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-semibold">Opciones</h2>
-            <button id="close-options-btn" aria-label="Cerrar menú de opciones" class="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-        </div>
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-semibold">Opciones</h2>
+        <button id="close-options-btn" aria-label="Cerrar menú de opciones" class="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+    </div>
+    
+    <div class="mb-6">
+        <h3 class="text-lg font-medium mb-2 text-gray-800 dark:text-gray-200">APARIENCIA</h3>
+        <label for="theme-selector" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Modo de Visualización:</label>
+        <select id="theme-selector" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option value="light">Claro</option>
+            <option value="dark">Oscuro</option>
+            <option value="system">Automático (Sistema)</option>
+        </select>
+    </div>
+
+    <div class="mb-6 border-t border-gray-300 dark:border-gray-600 pt-4">
+        <h3 class="text-lg font-medium mb-3 text-gray-800 dark:text-gray-200">VOZ (TEXT-TO-SPEECH)</h3>
         
-        <div class="mb-6">
-            <label for="theme-selector" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Modo de Visualización:</label>
-            <select id="theme-selector" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option value="light">Claro</option>
-                <option value="dark">Oscuro</option>
-                <option value="system">Automático (Sistema)</option>
+        <div class="mb-4">
+            <label for="voice-selector" class="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Voz:</label>
+            <select id="voice-selector" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <option value="">Cargando voces...</option>
             </select>
         </div>
-        
-        <button id="apply-changes-btn" class="w-full bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 transition-colors duration-150">
-            Aplicar Cambios
-        </button>
-        <div class="mt-auto pt-4 text-xs text-gray-500 dark:text-gray-400 text-center">
-            PWA Fases v1.0
+
+        <div class="mb-4">
+            <label for="voice-rate" class="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Velocidad: <span id="voice-rate-value" class="font-normal">1.0</span></label>
+            <input type="range" id="voice-rate" min="0.5" max="2" step="0.1" value="1.0" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
+        </div>
+
+        <div class="mb-4">
+            <label for="voice-pitch" class="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Tono: <span id="voice-pitch-value" class="font-normal">1.0</span></label>
+            <input type="range" id="voice-pitch" min="0" max="2" step="0.1" value="1.0" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
+        </div>
+
+        <div class="mb-4">
+            <label for="voice-volume" class="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Volumen: <span id="voice-volume-value" class="font-normal">1.0</span></label>
+            <input type="range" id="voice-volume" min="0" max="1" step="0.1" value="1.0" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
         </div>
     </div>
+    
+    <button id="apply-changes-btn" class="mt-auto w-full bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 transition-colors duration-150">
+        Aplicar Cambios
+    </button>
+    <div class="mt-4 text-xs text-gray-500 dark:text-gray-400 text-center">
+        PWA Fases v1.1 </div>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         // --- Selectores de Elementos ---
         const appContainer = document.getElementById('app-container');
-        const mainScreen = document.getElementById('main-screen');
+        const mainScreen = document.getElementById('main-screen'); // Selector para la pantalla principal
         const hamburgerBtn = document.getElementById('hamburger-btn');
         const optionsMenu = document.getElementById('options-menu');
         const optionsOverlay = document.getElementById('options-overlay');
         const closeOptionsBtn = document.getElementById('close-options-btn');
-        const themeSelector = document.getElementById('theme-selector');
-        const applyChangesBtn = document.getElementById('apply-changes-btn');
         
         const screens = document.querySelectorAll('.screen');
         const backToMainBtns = document.querySelectorAll('.back-to-main');
 
-        // --- Datos de Imágenes para Fase 1 (sin cambios respecto a la versión anterior) ---
+        // Selectores para Opciones de Apariencia
+        const themeSelector = document.getElementById('theme-selector');
+        
+        // Selectores para Opciones de Voz (TTS)
+        const voiceSelectorElement = document.getElementById('voice-selector');
+        const voiceRateElement = document.getElementById('voice-rate');
+        const voiceRateValueElement = document.getElementById('voice-rate-value');
+        const voicePitchElement = document.getElementById('voice-pitch');
+        const voicePitchValueElement = document.getElementById('voice-pitch-value');
+        const voiceVolumeElement = document.getElementById('voice-volume');
+        const voiceVolumeValueElement = document.getElementById('voice-volume-value');
+        
+        const applyChangesBtn = document.getElementById('apply-changes-btn');
+
+
+        // --- Configuración Global de TTS ---
+        let ttsSettings = {
+            voiceName: '',
+            lang: 'es-ES', // Idioma por defecto para el habla, se ajustará con la voz seleccionada
+            rate: 1.0,
+            pitch: 1.0,
+            volume: 1.0
+        };
+        let availableVoices = []; // Almacenará las voces cargadas
+
+        // --- Datos de Imágenes para Fase 1 ---
         const fase1ImageData = {
             col1: [
                 { src: 'https://cdn-icons-png.flaticon.com/512/3003/3003740.png', speech: 'mano', alt: 'Icono de mano saludando' },
@@ -218,12 +268,11 @@
         };
 
         // --- Funciones ---
-
         function showScreen(screenId) {
             screens.forEach(screen => {
                 if (screen.id === screenId) {
                     screen.classList.remove('hidden');
-                    screen.classList.add('active-screen');
+                    screen.classList.add('active-screen'); // La clase .active-screen ya maneja flex, flex-direction, height, overflow
                 } else {
                     screen.classList.add('hidden');
                     screen.classList.remove('active-screen');
@@ -233,6 +282,7 @@
         }
 
         function toggleOptionsMenu(show) {
+            if (!optionsMenu || !optionsOverlay) return;
             if (show) {
                 optionsOverlay.classList.remove('hidden');
                 optionsMenu.classList.remove('-translate-x-full');
@@ -250,62 +300,133 @@
             }
         }
         
-        // --- LÓGICA DEL TEMA MEJORADA ---
         function applyTheme(theme) {
-            // Descomenta las siguientes líneas para depurar en la consola de tu navegador:
-            // console.log('[Theme] Intentando aplicar tema:', theme);
-            // console.log('[Theme] Preferencias del sistema (oscuro):', window.matchMedia('(prefers-color-scheme: dark)').matches);
-            // console.log('[Theme] Clases HTML antes:', document.documentElement.classList);
-
-            if (theme === 'dark') {
+            if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
-            } else if (theme === 'light') {
+            } else {
                 document.documentElement.classList.remove('dark');
-            } else { // theme === 'system'
-                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
             }
             localStorage.setItem('theme', theme);
-            
-            // Descomenta la siguiente línea para depurar:
-            // console.log('[Theme] Tema aplicado. Clases HTML después:', document.documentElement.classList);
-            // console.log('[Theme] Preferencia guardada en localStorage:', localStorage.getItem('theme'));
         }
 
-        // Cargar tema guardado al iniciar o usar 'system' por defecto
-        const savedTheme = localStorage.getItem('theme') || 'system';
-        themeSelector.value = savedTheme; // Asegura que el <select> muestre la opción correcta
-        applyTheme(savedTheme); // Aplica el tema actual
+        function populateVoiceSelector() {
+            if (!voiceSelectorElement) return;
+            
+            const previouslySelectedVoiceName = ttsSettings.voiceName; // Usar valor de ttsSettings ya cargado
+            voiceSelectorElement.innerHTML = ''; 
 
-        function speak(text) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'es-ES';
-                window.speechSynthesis.speak(utterance);
+            const defaultOption = document.createElement('option');
+            defaultOption.value = "";
+            defaultOption.textContent = "Voz por defecto del navegador";
+            voiceSelectorElement.appendChild(defaultOption);
+
+            availableVoices.forEach(voice => {
+                const option = document.createElement('option');
+                option.textContent = `${voice.name} (${voice.lang})`;
+                option.value = voice.name;
+                option.setAttribute('data-lang', voice.lang);
+                voiceSelectorElement.appendChild(option);
+            });
+            
+            if (previouslySelectedVoiceName) {
+                const voiceExists = availableVoices.some(v => v.name === previouslySelectedVoiceName);
+                if (voiceExists) {
+                    voiceSelectorElement.value = previouslySelectedVoiceName;
+                } else {
+                    ttsSettings.voiceName = ""; // Reset si la voz no se encuentra
+                }
+            }
+             // Sincronizar ttsSettings.lang con la voz seleccionada (o la por defecto)
+            const selectedOption = voiceSelectorElement.options[voiceSelectorElement.selectedIndex];
+            if (selectedOption && selectedOption.value) {
+                 ttsSettings.lang = selectedOption.getAttribute('data-lang') || 'es-ES';
             } else {
-                console.warn('Text-to-Speech no es soportado en este navegador.');
-                alert('Tu navegador no soporta la función de voz.');
+                 ttsSettings.lang = localStorage.getItem('ttsLang') || 'es-ES'; // Si es "por defecto", mantener el lang guardado o un default
             }
         }
 
-        // --- Inicialización ---
-        const mainScreenContent = mainScreen.querySelector('main');
-        for (let i = 1; i <= 6; i++) {
-            const faseBtn = document.createElement('button');
-            faseBtn.className = 'fase-btn bg-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-50 text-blue-500 dark:text-blue-400 font-semibold py-8 px-4 border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 text-lg sm:text-xl';
-            faseBtn.textContent = `Fase ${i}`;
-            faseBtn.dataset.targetScreen = `fase-${i}-screen`;
-            faseBtn.addEventListener('click', () => showScreen(faseBtn.dataset.targetScreen));
-            mainScreenContent.appendChild(faseBtn);
+        function loadTTSSettingsFromLocalStorage() {
+            ttsSettings.voiceName = localStorage.getItem('ttsVoiceName') || '';
+            ttsSettings.lang = localStorage.getItem('ttsLang') || 'es-ES'; // Este lang se refinará si se selecciona una voz específica
+            ttsSettings.rate = parseFloat(localStorage.getItem('ttsRate') || 1.0);
+            ttsSettings.pitch = parseFloat(localStorage.getItem('ttsPitch') || 1.0);
+            ttsSettings.volume = parseFloat(localStorage.getItem('ttsVolume') || 1.0);
+
+            if (voiceRateElement) {
+                voiceRateElement.value = ttsSettings.rate;
+                if (voiceRateValueElement) voiceRateValueElement.textContent = ttsSettings.rate.toFixed(1);
+            }
+            if (voicePitchElement) {
+                voicePitchElement.value = ttsSettings.pitch;
+                if (voicePitchValueElement) voicePitchValueElement.textContent = ttsSettings.pitch.toFixed(1);
+            }
+            if (voiceVolumeElement) {
+                voiceVolumeElement.value = ttsSettings.volume;
+                if (voiceVolumeValueElement) voiceVolumeValueElement.textContent = ttsSettings.volume.toFixed(1);
+            }
+            // El voiceSelector se actualiza en populateVoiceSelector y después en initializeTTS
+        }
+        
+        function initializeTTS() {
+            if (typeof speechSynthesis === 'undefined') return; // Salir si speechSynthesis no está disponible
+
+            loadTTSSettingsFromLocalStorage(); // Cargar primero las configuraciones guardadas
+
+            availableVoices = window.speechSynthesis.getVoices();
+            populateVoiceSelector(); // Poblar y intentar seleccionar la voz basada en ttsSettings
+
+            // Asegurar que el selector y ttsSettings.lang estén sincronizados después de cargar voces
+            if (voiceSelectorElement && ttsSettings.voiceName) {
+                const voiceExists = availableVoices.some(v => v.name === ttsSettings.voiceName);
+                if (voiceExists) {
+                    voiceSelectorElement.value = ttsSettings.voiceName;
+                    const selectedVoiceObject = availableVoices.find(v => v.name === ttsSettings.voiceName);
+                    if (selectedVoiceObject) ttsSettings.lang = selectedVoiceObject.lang;
+                } else {
+                    ttsSettings.voiceName = ''; // La voz guardada no existe, usar por defecto
+                    voiceSelectorElement.value = ''; // Seleccionar "Voz por defecto"
+                    ttsSettings.lang = localStorage.getItem('ttsLang') || 'es-ES'; // Reintentar cargar lang o usar default
+                }
+            } else if (voiceSelectorElement) { // Si no hay voiceName guardado, asegurar que el selector está en "por defecto"
+                voiceSelectorElement.value = '';
+                ttsSettings.lang = localStorage.getItem('ttsLang') || 'es-ES';
+            }
         }
 
+        function speak(text) {
+            if (!('speechSynthesis' in window)) {
+                console.warn('Text-to-Speech no es soportado en este navegador.');
+                alert('Tu navegador no soporta la función de voz.');
+                return;
+            }
+            window.speechSynthesis.cancel(); 
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.text = text;
+            utterance.lang = ttsSettings.lang; 
+            utterance.rate = ttsSettings.rate;
+            utterance.pitch = ttsSettings.pitch;
+            utterance.volume = ttsSettings.volume;
+
+            if (ttsSettings.voiceName) {
+                const voice = availableVoices.find(v => v.name === ttsSettings.voiceName);
+                if (voice) {
+                    utterance.voice = voice;
+                } else {
+                    console.warn(`Voz "${ttsSettings.voiceName}" no encontrada. Usando voz por defecto para ${ttsSettings.lang}.`);
+                }
+            }
+            
+            utterance.onerror = (event) => { console.error("Error en TTS:", event.error); };
+            window.speechSynthesis.speak(utterance);
+        }
+        
         function loadImage(columnId, imageData) {
             const columnElement = document.getElementById(columnId);
-            if (!columnElement) return;
+            if (!columnElement) {
+                console.error(`Error: No se encontró la columna con ID ${columnId}`);
+                return;
+            }
 
             imageData.forEach(imgData => {
                 const img = document.createElement('img');
@@ -323,33 +444,110 @@
                 columnElement.appendChild(img);
             });
         }
-            
+
+        // --- INICIALIZACIÓN DE LA UI PRINCIPAL ---
+        if (mainScreen) {
+            const mainScreenContent = mainScreen.querySelector('main');
+            if (mainScreenContent) {
+                for (let i = 1; i <= 6; i++) {
+                    const faseBtn = document.createElement('button');
+                    faseBtn.className = 'fase-btn bg-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-50 text-blue-500 dark:text-blue-400 font-semibold py-8 px-4 border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 text-lg sm:text-xl';
+                    faseBtn.textContent = `Fase ${i}`;
+                    faseBtn.dataset.targetScreen = `fase-${i}-screen`;
+                    faseBtn.addEventListener('click', () => showScreen(faseBtn.dataset.targetScreen));
+                    mainScreenContent.appendChild(faseBtn);
+                }
+            } else {
+                console.error("Error: No se encontró el elemento <main> dentro de #main-screen.");
+            }
+        } else {
+            console.error("Error: No se encontró el elemento #main-screen.");
+        }
+        
         loadImage('fase1-col1', fase1ImageData.col1);
         loadImage('fase1-col2', fase1ImageData.col2);
         loadImage('fase1-col3', fase1ImageData.col3);
 
+        // Cargar tema guardado
+        const savedTheme = localStorage.getItem('theme') || 'system';
+        if (themeSelector) themeSelector.value = savedTheme;
+        applyTheme(savedTheme);
+
+        // Inicializar TTS (esto ahora incluye cargar settings y poblar el selector de voz)
+        if (typeof speechSynthesis !== 'undefined') {
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = initializeTTS;
+            }
+            initializeTTS(); // Llamada inicial
+        } else {
+            // Deshabilitar controles de voz si TTS no es soportado
+            if(voiceSelectorElement) voiceSelectorElement.disabled = true;
+            if(voiceRateElement) voiceRateElement.disabled = true;
+            if(voicePitchElement) voicePitchElement.disabled = true;
+            if(voiceVolumeElement) voiceVolumeElement.disabled = true;
+            console.warn("Speech Synthesis no soportado, controles de voz deshabilitados.");
+        }
+
         // --- Event Listeners ---
-        hamburgerBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleOptionsMenu(true);
-        });
-        closeOptionsBtn.addEventListener('click', () => toggleOptionsMenu(false));
-        optionsOverlay.addEventListener('click', () => toggleOptionsMenu(false));
-        optionsMenu.addEventListener('click', (e) => e.stopPropagation());
+        if (hamburgerBtn) {
+            hamburgerBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleOptionsMenu(true);
+            });
+        }
+        if (closeOptionsBtn) closeOptionsBtn.addEventListener('click', () => toggleOptionsMenu(false));
+        if (optionsOverlay) optionsOverlay.addEventListener('click', () => toggleOptionsMenu(false));
+        if (optionsMenu) optionsMenu.addEventListener('click', (e) => e.stopPropagation());
 
-        applyChangesBtn.addEventListener('click', () => {
-            applyTheme(themeSelector.value); // Aplica el tema seleccionado en el dropdown
-            toggleOptionsMenu(false); 
-        });
+        if (voiceRateElement && voiceRateValueElement) {
+            voiceRateElement.addEventListener('input', function() {
+                voiceRateValueElement.textContent = parseFloat(this.value).toFixed(1);
+            });
+        }
+        if (voicePitchElement && voicePitchValueElement) {
+            voicePitchElement.addEventListener('input', function() {
+                voicePitchValueElement.textContent = parseFloat(this.value).toFixed(1);
+            });
+        }
+        if (voiceVolumeElement && voiceVolumeValueElement) {
+            voiceVolumeElement.addEventListener('input', function() {
+                voiceVolumeValueElement.textContent = parseFloat(this.value).toFixed(1);
+            });
+        }
 
+        if (applyChangesBtn) {
+            applyChangesBtn.addEventListener('click', () => {
+                if(themeSelector) applyTheme(themeSelector.value);
+
+                if (voiceSelectorElement) {
+                    const selectedOption = voiceSelectorElement.options[voiceSelectorElement.selectedIndex];
+                    ttsSettings.voiceName = selectedOption.value; 
+                    if (selectedOption.value && selectedOption.dataset.lang) { // Si se seleccionó una voz específica
+                        ttsSettings.lang = selectedOption.dataset.lang;
+                    } else { // "Voz por defecto" o una voz sin data-lang (improbable si se pobló bien)
+                        ttsSettings.lang = localStorage.getItem('ttsLangOriginal') || 'es-ES'; // Mantener un lang general o por defecto
+                    }
+                }
+                if (voiceRateElement) ttsSettings.rate = parseFloat(voiceRateElement.value);
+                if (voicePitchElement) ttsSettings.pitch = parseFloat(voicePitchElement.value);
+                if (voiceVolumeElement) ttsSettings.volume = parseFloat(voiceVolumeElement.value);
+
+                localStorage.setItem('ttsVoiceName', ttsSettings.voiceName);
+                localStorage.setItem('ttsLang', ttsSettings.lang); // Guardar el lang asociado a la voz
+                localStorage.setItem('ttsRate', ttsSettings.rate.toString());
+                localStorage.setItem('ttsPitch', ttsSettings.pitch.toString());
+                localStorage.setItem('ttsVolume', ttsSettings.volume.toString());
+
+                toggleOptionsMenu(false);
+            });
+        }
+        
         backToMainBtns.forEach(btn => {
             btn.addEventListener('click', () => showScreen('main-screen'));
         });
 
-        // Listener para cambios de preferencia de color del sistema
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-            // Solo actualiza si el tema seleccionado es 'system'
-            if (themeSelector.value === 'system') {
+            if (themeSelector && themeSelector.value === 'system') {
                 applyTheme('system');
             }
         });
@@ -357,7 +555,7 @@
         // Registrar Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js') // Asegúrate que el nombre del archivo es correcto
+                navigator.serviceWorker.register('service-worker.js')
                     .then(registration => {
                         console.log('ServiceWorker registrado con éxito:', registration.scope);
                     })
@@ -365,6 +563,8 @@
                         console.log('Fallo en el registro de ServiceWorker:', error);
                     });
             });
+        } else {
+            console.log('Service Worker no es soportado en este navegador.');
         }
     });
 </script>
