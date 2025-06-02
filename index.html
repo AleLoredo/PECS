@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA Fases</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3b82f6"> 
+    <style>
+    /* ---- Estilos Globales y de Contenedores Principales ---- */
+    html, body {
+        height: 100%; /* Ocupar toda la altura del viewport */
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* CRÍTICO: Evita el scroll en html y body */
+        /* El font-family y colores base son manejados por las clases de Tailwind en <body> */
+    }
+
+    body {
+        position: relative; /* Contexto para elementos posicionados absolutamente como el menú de opciones */
+    }
+
+    #app-container {
+        width: 100%;
+        height: 100%; /* Ocupar todo el espacio de body */
+        overflow: hidden; /* CRÍTICO: #app-container es el viewport para las pantallas */
+        position: relative; /* Contexto para las pantallas posicionadas absolutamente */
+    }
+
+    /* ---- Estilos de Pantalla (.screen y .active-screen) ---- */
+    .screen {
+        display: none; /* Ocultar pantallas inactivas */
+        width: 100%;
+        height: 100%;
+        position: absolute; /* Posicionar absolutamente dentro de #app-container */
+        top: 0;
+        left: 0;
+        background-color: inherit; /* Heredar color de fondo de body (manejado por Tailwind) */
+        /* Asegura que las transiciones de tema se apliquen bien si el fondo es importante aquí */
+    }
+
+    .active-screen {
+        display: flex;       /* Usar flex para la estructura interna (header, main) */
+        flex-direction: column;
+        overflow: hidden;    /* CRÍTICO: La pantalla activa en sí no debe hacer scroll. */
+                             /* Las partes internas pueden tener su propio scroll. */
+    }
+
+    /* ---- Estilos Específicos y Previamente Definidos ---- */
+    /* Líneas separadoras para Fase 1 */
+    .separator-line {
+        width: 1px;
+        background-color: #9ca3af; /* gris-400 */
+        align-self: stretch;
+    }
+    .dark .separator-line {
+        background-color: #4b5563; /* gris-600 en modo oscuro */
+    }
+
+    /* Imágenes de Fase 1 */
+    .fase-image {
+        width: 20vh;
+        height: 20vh;
+        object-fit: cover;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 0.375rem; /* rounded-md */
+        cursor: pointer;
+        background-color: #e5e7eb; /* bg-gray-200 */
+    }
+    .dark .fase-image {
+        background-color: #374151; /* bg-gray-700 */
+    }
+
+    /* Scroll para el área de contenido principal de main-screen */
+    /* Se dirige al <main> que es hijo directo de #main-screen */
+    #main-screen > main {
+        overflow-y: auto; /* Permite scroll solo en el contenedor de botones */
+    }
+
+    /* Fase 1: las columnas internas ya tienen overflow-y: auto y h-full/h-[90vh]
+       La estructura de Fase 1 (header + main > div.h-[90vh] > columnas scrollables)
+       debería funcionar bien dentro de .active-screen (que tiene overflow:hidden).
+       El main de Fase 1 usará flex-grow para ocupar el espacio restante tras el header.
+    */
+</style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans transition-colors duration-300">
+
+    <div id="app-container">
+
+        <!-- <div id="main-screen" class="screen active-screen">
+            <header class="p-4 bg-blue-500 dark:bg-blue-700 text-white flex justify-between items-center shadow-md sticky top-0 z-10">
+                <h1 class="text-2xl font-bold">Aplicación de Fases</h1>
+                <button id="hamburger-btn" aria-label="Abrir menú de opciones" class="p-2 rounded-md hover:bg-blue-600 dark:hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                </button>
+            </header>
+            <main class="flex-grow p-6 grid grid-cols-2 sm:grid-cols-3 gap-5 justify-items-center items-center">
+                </main>
+        </div> -->
+
+
+        <div id="main-screen" class="screen active-screen"> <header class="p-4 bg-blue-500 dark:bg-blue-700 text-white flex justify-between items-center shadow-md sticky top-0 z-10">
+                <h1 class="text-2xl font-bold">Aplicación de Fases</h1>
+                <button id="hamburger-btn" aria-label="Abrir menú de opciones" class="p-2 rounded-md hover:bg-blue-600 dark:hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                </button>
+            </header>
+            <main class="flex-grow p-6 grid grid-cols-2 sm:grid-cols-3 gap-5 justify-items-center items-center">
+                </main>
+        </div>
+
+
+        <div id="fase-1-screen" class="screen hidden">
+            <header class="p-4 bg-green-500 dark:bg-green-700 text-white flex justify-between items-center shadow-md sticky top-0 z-10">
+                <button class="back-to-main p-2 rounded-md hover:bg-green-600 dark:hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-white" aria-label="Volver al menú principal">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                </button>
+                <h1 class="text-2xl font-bold">Fase 1</h1>
+                <div class="w-7 h-7"></div> </header>
+            <main class="flex-grow flex justify-center items-start pt-4 pb-4 sm:pt-6 sm:pb-6" style="padding-left: calc(100vw / 30); padding-right: calc(100vw / 30);">
+                <div class="flex w-full h-[90vh]" style="gap: calc(100vw / 60);">
+                    <div id="fase1-col1" class="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-y-auto p-3 space-y-4" style="width: 30vw; height: 100%;">
+                        </div>
+                    <div class="separator-line"></div>
+                    <div id="fase1-col2" class="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-y-auto p-3 space-y-4" style="width: 30vw; height: 100%;">
+                        </div>
+                    <div class="separator-line"></div>
+                    <div id="fase1-col3" class="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-y-auto p-3 space-y-4" style="width: 30vw; height: 100%;">
+                        </div>
+                </div>
+            </main>
+        </div>
+
+        <div id="fase-2-screen" class="screen hidden items-center justify-center text-3xl"><header class="p-4 bg-yellow-500 dark:bg-yellow-700 text-white flex justify-between items-center shadow-md sticky top-0 z-10 w-full"><button class="back-to-main p-2 rounded-md hover:bg-yellow-600 dark:hover:bg-yellow-800 focus:outline-none focus:ring-2 focus:ring-white" aria-label="Volver al menú principal"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button><h1 class="text-2xl font-bold">Fase 2</h1><div class="w-7 h-7"></div></header><main class="flex-grow flex items-center justify-center">Contenido Fase 2</main></div>
+        <div id="fase-3-screen" class="screen hidden items-center justify-center text-3xl"><header class="p-4 bg-purple-500 dark:bg-purple-700 text-white flex justify-between items-center shadow-md sticky top-0 z-10 w-full"><button class="back-to-main p-2 rounded-md hover:bg-purple-600 dark:hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-white" aria-label="Volver al menú principal"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button><h1 class="text-2xl font-bold">Fase 3</h1><div class="w-7 h-7"></div></header><main class="flex-grow flex items-center justify-center">Contenido Fase 3</main></div>
+        <div id="fase-4-screen" class="screen hidden items-center justify-center text-3xl"><header class="p-4 bg-pink-500 dark:bg-pink-700 text-white flex justify-between items-center shadow-md sticky top-0 z-10 w-full"><button class="back-to-main p-2 rounded-md hover:bg-pink-600 dark:hover:bg-pink-800 focus:outline-none focus:ring-2 focus:ring-white" aria-label="Volver al menú principal"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button><h1 class="text-2xl font-bold">Fase 4</h1><div class="w-7 h-7"></div></header><main class="flex-grow flex items-center justify-center">Contenido Fase 4</main></div>
+        <div id="fase-5-screen" class="screen hidden items-center justify-center text-3xl"><header class="p-4 bg-indigo-500 dark:bg-indigo-700 text-white flex justify-between items-center shadow-md sticky top-0 z-10 w-full"><button class="back-to-main p-2 rounded-md hover:bg-indigo-600 dark:hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-white" aria-label="Volver al menú principal"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button><h1 class="text-2xl font-bold">Fase 5</h1><div class="w-7 h-7"></div></header><main class="flex-grow flex items-center justify-center">Contenido Fase 5</main></div>
+        <div id="fase-6-screen" class="screen hidden items-center justify-center text-3xl"><header class="p-4 bg-teal-500 dark:bg-teal-700 text-white flex justify-between items-center shadow-md sticky top-0 z-10 w-full"><button class="back-to-main p-2 rounded-md hover:bg-teal-600 dark:hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-white" aria-label="Volver al menú principal"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button><h1 class="text-2xl font-bold">Fase 6</h1><div class="w-7 h-7"></div></header><main class="flex-grow flex items-center justify-center">Contenido Fase 6</main></div>
+
+    </div>
+
+    <div id="options-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40 transition-opacity duration-300"></div>
+    <div id="options-menu" class="fixed top-0 left-0 w-72 sm:w-80 h-full bg-white dark:bg-gray-800 shadow-xl p-6 transform -translate-x-full transition-transform duration-300 ease-in-out z-50 flex flex-col">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-semibold">Opciones</h2>
+            <button id="close-options-btn" aria-label="Cerrar menú de opciones" class="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        
+        <div class="mb-6">
+            <label for="theme-selector" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Modo de Visualización:</label>
+            <select id="theme-selector" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <option value="light">Claro</option>
+                <option value="dark">Oscuro</option>
+                <option value="system">Automático (Sistema)</option>
+            </select>
+        </div>
+        
+        <button id="apply-changes-btn" class="w-full bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 transition-colors duration-150">
+            Aplicar Cambios
+        </button>
+        <div class="mt-auto pt-4 text-xs text-gray-500 dark:text-gray-400 text-center">
+            PWA Fases v1.0
+        </div>
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Selectores de Elementos ---
+        const appContainer = document.getElementById('app-container');
+        const mainScreen = document.getElementById('main-screen');
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const optionsMenu = document.getElementById('options-menu');
+        const optionsOverlay = document.getElementById('options-overlay');
+        const closeOptionsBtn = document.getElementById('close-options-btn');
+        const themeSelector = document.getElementById('theme-selector');
+        const applyChangesBtn = document.getElementById('apply-changes-btn');
+        
+        const screens = document.querySelectorAll('.screen');
+        const backToMainBtns = document.querySelectorAll('.back-to-main');
+
+        // --- Datos de Imágenes para Fase 1 (sin cambios respecto a la versión anterior) ---
+        const fase1ImageData = {
+            col1: [
+                { src: 'https://cdn-icons-png.flaticon.com/512/3003/3003740.png', speech: 'mano', alt: 'Icono de mano saludando' },
+                { src: 'https://cdn-icons-png.flaticon.com/512/2361/2361750.png', speech: 'ojo', alt: 'Icono de ojo' },
+                { src: 'https://cdn-icons-png.flaticon.com/512/1533/1533829.png', speech: 'boca', alt: 'Icono de boca' },
+                { src: 'https://cdn-icons-png.flaticon.com/512/2290/2290806.png', speech: 'nariz', alt: 'Icono de nariz' },
+                { src: 'https://cdn-icons-png.flaticon.com/512/2290/2290800.png', speech: 'oreja', alt: 'Icono de oreja' },
+                { src: 'https://cdn-icons-png.flaticon.com/512/10096/10096991.png', speech: 'pie', alt: 'Icono de pie' }
+            ],
+            col2: [
+                { src: 'https://cdn-icons-png.flaticon.com/512/1020/1020210.png', speech: 'juguete', alt: 'Icono de bloques de juguete' },
+                { src: 'https://cdn-icons-png.flaticon.com/512/1166/1166907.png', speech: 'pelota', alt: 'Icono de pelota de playa' },
+                { src: 'https://cdn-icons-png.flaticon.com/512/3202/3202926.png', speech: 'auto', alt: 'Icono de auto' },
+                { src: 'https://cdn-icons-png.flaticon.com/512/9107/9107917.png', speech: 'perro', alt: 'Icono de perro' },
+                { src: 'https://cdn-icons-png.flaticon.com/512/1998/1998709.png', speech: 'caballo', alt: 'Icono de caballo' }
+            ],
+            col3: [
+                { src: 'https://cdn-icons-png.flaticon.com/512/415/415733.png', speech: 'manzana', alt: 'Icono de manzana' },
+                { src: 'https://cdn-icons-png.flaticon.com/512/2070/2070223.png', speech: 'banana', alt: 'Icono de banana' },
+                { src: 'https://cdn-icons-png.flaticon.com/512/608/608969.png', speech: 'agua', alt: 'Icono de vaso de agua' },
+                { src: 'https://cdn-icons-png.flaticon.com/512/2936/2936991.png', speech: 'pis', alt: 'Icono de charco (pis)' },
+                { src: 'https://cdn-icons-png.flaticon.com/512/2966/2966008.png', speech: 'caca', alt: 'Icono de emoji de caca' }
+            ]
+        };
+
+        // --- Funciones ---
+
+        function showScreen(screenId) {
+            screens.forEach(screen => {
+                if (screen.id === screenId) {
+                    screen.classList.remove('hidden');
+                    screen.classList.add('active-screen');
+                } else {
+                    screen.classList.add('hidden');
+                    screen.classList.remove('active-screen');
+                }
+            });
+            window.scrollTo(0, 0);
+        }
+
+        function toggleOptionsMenu(show) {
+            if (show) {
+                optionsOverlay.classList.remove('hidden');
+                optionsMenu.classList.remove('-translate-x-full');
+                optionsMenu.classList.add('translate-x-0');
+                optionsOverlay.classList.add('opacity-50');
+                optionsOverlay.classList.remove('opacity-0');
+            } else {
+                optionsMenu.classList.add('-translate-x-full');
+                optionsMenu.classList.remove('translate-x-0');
+                optionsOverlay.classList.add('opacity-0');
+                optionsOverlay.classList.remove('opacity-50');
+                setTimeout(() => {
+                    optionsOverlay.classList.add('hidden');
+                }, 300);
+            }
+        }
+        
+        // --- LÓGICA DEL TEMA MEJORADA ---
+        function applyTheme(theme) {
+            // Descomenta las siguientes líneas para depurar en la consola de tu navegador:
+            // console.log('[Theme] Intentando aplicar tema:', theme);
+            // console.log('[Theme] Preferencias del sistema (oscuro):', window.matchMedia('(prefers-color-scheme: dark)').matches);
+            // console.log('[Theme] Clases HTML antes:', document.documentElement.classList);
+
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else if (theme === 'light') {
+                document.documentElement.classList.remove('dark');
+            } else { // theme === 'system'
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }
+            localStorage.setItem('theme', theme);
+            
+            // Descomenta la siguiente línea para depurar:
+            // console.log('[Theme] Tema aplicado. Clases HTML después:', document.documentElement.classList);
+            // console.log('[Theme] Preferencia guardada en localStorage:', localStorage.getItem('theme'));
+        }
+
+        // Cargar tema guardado al iniciar o usar 'system' por defecto
+        const savedTheme = localStorage.getItem('theme') || 'system';
+        themeSelector.value = savedTheme; // Asegura que el <select> muestre la opción correcta
+        applyTheme(savedTheme); // Aplica el tema actual
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'es-ES';
+                window.speechSynthesis.speak(utterance);
+            } else {
+                console.warn('Text-to-Speech no es soportado en este navegador.');
+                alert('Tu navegador no soporta la función de voz.');
+            }
+        }
+
+        // --- Inicialización ---
+        const mainScreenContent = mainScreen.querySelector('main');
+        for (let i = 1; i <= 6; i++) {
+            const faseBtn = document.createElement('button');
+            faseBtn.className = 'fase-btn bg-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-50 text-blue-500 dark:text-blue-400 font-semibold py-8 px-4 border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 text-lg sm:text-xl';
+            faseBtn.textContent = `Fase ${i}`;
+            faseBtn.dataset.targetScreen = `fase-${i}-screen`;
+            faseBtn.addEventListener('click', () => showScreen(faseBtn.dataset.targetScreen));
+            mainScreenContent.appendChild(faseBtn);
+        }
+
+        function loadImage(columnId, imageData) {
+            const columnElement = document.getElementById(columnId);
+            if (!columnElement) return;
+
+            imageData.forEach(imgData => {
+                const img = document.createElement('img');
+                img.src = imgData.src;
+                img.alt = imgData.alt;
+                img.className = 'fase-image';
+                img.dataset.speech = imgData.speech;
+                img.onerror = function() {
+                    this.onerror=null;
+                    const placeholderSize = Math.round(window.innerHeight * 0.2);
+                    this.src=`https://placehold.co/${placeholderSize}x${placeholderSize}/cccccc/969696?text=Error`;
+                    this.alt = 'Error al cargar imagen';
+                };
+                img.addEventListener('click', () => speak(imgData.speech));
+                columnElement.appendChild(img);
+            });
+        }
+            
+        loadImage('fase1-col1', fase1ImageData.col1);
+        loadImage('fase1-col2', fase1ImageData.col2);
+        loadImage('fase1-col3', fase1ImageData.col3);
+
+        // --- Event Listeners ---
+        hamburgerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleOptionsMenu(true);
+        });
+        closeOptionsBtn.addEventListener('click', () => toggleOptionsMenu(false));
+        optionsOverlay.addEventListener('click', () => toggleOptionsMenu(false));
+        optionsMenu.addEventListener('click', (e) => e.stopPropagation());
+
+        applyChangesBtn.addEventListener('click', () => {
+            applyTheme(themeSelector.value); // Aplica el tema seleccionado en el dropdown
+            toggleOptionsMenu(false); 
+        });
+
+        backToMainBtns.forEach(btn => {
+            btn.addEventListener('click', () => showScreen('main-screen'));
+        });
+
+        // Listener para cambios de preferencia de color del sistema
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            // Solo actualiza si el tema seleccionado es 'system'
+            if (themeSelector.value === 'system') {
+                applyTheme('system');
+            }
+        });
+
+        // Registrar Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js') // Asegúrate que el nombre del archivo es correcto
+                    .then(registration => {
+                        console.log('ServiceWorker registrado con éxito:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Fallo en el registro de ServiceWorker:', error);
+                    });
+            });
+        }
+    });
+</script>
+</body>
+</html>

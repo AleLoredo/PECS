@@ -1,0 +1,54 @@
+{
+  "name": "PWA Aplicación de Fases",
+  "short_name": "FasesApp",
+  "description": "Una Progressive Web App con fases interactivas y contenido educativo.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f3f4f6",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://placehold.co/72x72/3b82f6/ffffff?text=Fase",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "https://placehold.co/96x96/3b82f6/ffffff?text=Fase",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "https://placehold.co/128x128/3b82f6/ffffff?text=Fase",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "https://placehold.co/144x144/3b82f6/ffffff?text=Fase",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "https://placehold.co/152x152/3b82f6/ffffff?text=Fase",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "https://placehold.co/192x192/3b82f6/ffffff?text=Fase",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://placehold.co/384x384/3b82f6/ffffff?text=Fase",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "https://placehold.co/512x512/3b82f6/ffffff?text=Fase",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
