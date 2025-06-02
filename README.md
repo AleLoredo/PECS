@@ -1,2 +1,6 @@
 # PECS
-A cross platform install free web based customizable PECS tool
+A convenient simple tool for kids with Autism Disorder Spectrum
+
+- Right now, this tools is:
+- Install-free 
+- Fully--customizable (coming soon!)
