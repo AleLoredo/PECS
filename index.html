@@ -154,9 +154,7 @@
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-xl font-semibold">Opciones</h2>
         <button id="close-options-btn" aria-label="Cerrar menú de opciones" class="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <svg></svg>
         </button>
     </div>
     
@@ -174,9 +172,16 @@
         <h3 class="text-lg font-medium mb-3 text-gray-800 dark:text-gray-200">VOZ (TEXT-TO-SPEECH)</h3>
         
         <div class="mb-4">
+            <label for="tts-language-selector" class="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Idioma para Voces:</label>
+            <select id="tts-language-selector" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <option value="">Cargando idiomas...</option>
+            </select>
+        </div>
+
+        <div class="mb-4">
             <label for="voice-selector" class="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Voz:</label>
             <select id="voice-selector" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option value="">Cargando voces...</option>
+                <option value="">Seleccione un idioma primero...</option>
             </select>
         </div>
 
@@ -200,14 +205,14 @@
         Aplicar Cambios
     </button>
     <div class="mt-4 text-xs text-gray-500 dark:text-gray-400 text-center">
-        PWA Fases v1.1 </div>
+        PWA Fases v1.2 </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         // --- Selectores de Elementos ---
         const appContainer = document.getElementById('app-container');
-        const mainScreen = document.getElementById('main-screen'); // Selector para la pantalla principal
+        const mainScreen = document.getElementById('main-screen');
         const hamburgerBtn = document.getElementById('hamburger-btn');
         const optionsMenu = document.getElementById('options-menu');
         const optionsOverlay = document.getElementById('options-overlay');
@@ -220,6 +225,7 @@
         const themeSelector = document.getElementById('theme-selector');
         
         // Selectores para Opciones de Voz (TTS)
+        const ttsLanguageSelectorElement = document.getElementById('tts-language-selector'); // Selector de Idioma TTS
         const voiceSelectorElement = document.getElementById('voice-selector');
         const voiceRateElement = document.getElementById('voice-rate');
         const voiceRateValueElement = document.getElementById('voice-rate-value');
@@ -230,11 +236,11 @@
         
         const applyChangesBtn = document.getElementById('apply-changes-btn');
 
-
         // --- Configuración Global de TTS ---
         let ttsSettings = {
-            voiceName: '',
-            lang: 'es-ES', // Idioma por defecto para el habla, se ajustará con la voz seleccionada
+            userPreferredLang: '',   // Idioma base seleccionado por el usuario para filtrar voces (ej: "es", "en")
+            selectedVoiceName: '',   // Nombre de la voz específica elegida
+            utteranceLang: '',       // Idioma exacto de la voz seleccionada para el utterance (ej: "es-ES", "en-US")
             rate: 1.0,
             pitch: 1.0,
             volume: 1.0
@@ -269,10 +275,11 @@
 
         // --- Funciones ---
         function showScreen(screenId) {
+            if (!screens) return;
             screens.forEach(screen => {
                 if (screen.id === screenId) {
                     screen.classList.remove('hidden');
-                    screen.classList.add('active-screen'); // La clase .active-screen ya maneja flex, flex-direction, height, overflow
+                    screen.classList.add('active-screen');
                 } else {
                     screen.classList.add('hidden');
                     screen.classList.remove('active-screen');
@@ -309,45 +316,123 @@
             localStorage.setItem('theme', theme);
         }
 
+        function getBrowserBaseLanguage() {
+            const lang = navigator.language || navigator.userLanguage || 'es'; // Fallback a 'es'
+            return lang.split('-')[0]; // Retorna la parte base, ej: "es" de "es-AR"
+        }
+        
+        function populateLanguageSelector() {
+            if (!ttsLanguageSelectorElement || availableVoices.length === 0) {
+                if(ttsLanguageSelectorElement) ttsLanguageSelectorElement.innerHTML = '<option value="">No hay idiomas disponibles</option>';
+                return;
+            }
+
+            const baseLangs = [...new Set(availableVoices.map(voice => voice.lang.split('-')[0]))].sort();
+            // Usar el userPreferredLang ya cargado/inicializado para la selección
+            const currentSelectedLang = ttsSettings.userPreferredLang; 
+            
+            ttsLanguageSelectorElement.innerHTML = ''; 
+
+            if (baseLangs.length === 0) {
+                 ttsLanguageSelectorElement.innerHTML = '<option value="">No hay idiomas</option>';
+                 return;
+            }
+
+            baseLangs.forEach(langCode => {
+                const option = document.createElement('option');
+                option.value = langCode;
+                try {
+                    let displayName = langCode;
+                    // Para obtener el nombre del idioma en el propio idioma (ej. "Español" en vez de "Spanish")
+                    // se podría usar new Intl.DisplayNames([langCode], { type: 'language' }).of(langCode);
+                    // pero para una lista de idiomas, es más común mostrarlos en el idioma de la UI.
+                    // Aquí lo mostramos en el idioma del código mismo si es posible, o el código.
+                    const languageNames = new Intl.DisplayNames([langCode], { type: 'language' }); // Usar el idioma del código para el nombre
+                    displayName = languageNames.of(langCode);
+                    option.textContent = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+                } catch (e) {
+                    option.textContent = langCode.toUpperCase(); 
+                }
+                ttsLanguageSelectorElement.appendChild(option);
+            });
+            
+            if (baseLangs.includes(currentSelectedLang)) {
+                ttsLanguageSelectorElement.value = currentSelectedLang;
+            } else if (baseLangs.length > 0) { // Si el preferido no está, seleccionar el primero de la lista
+                ttsLanguageSelectorElement.value = baseLangs[0];
+            }
+            // Actualizar ttsSettings.userPreferredLang con el valor que realmente quedó seleccionado
+            ttsSettings.userPreferredLang = ttsLanguageSelectorElement.value;
+        }
+
         function populateVoiceSelector() {
             if (!voiceSelectorElement) return;
             
-            const previouslySelectedVoiceName = ttsSettings.voiceName; // Usar valor de ttsSettings ya cargado
-            voiceSelectorElement.innerHTML = ''; 
+            const filterLang = ttsSettings.userPreferredLang;
+            const previouslySelectedVoiceName = ttsSettings.selectedVoiceName;
+            voiceSelectorElement.innerHTML = '';
 
             const defaultOption = document.createElement('option');
-            defaultOption.value = "";
+            defaultOption.value = ""; 
             defaultOption.textContent = "Voz por defecto del navegador";
             voiceSelectorElement.appendChild(defaultOption);
 
-            availableVoices.forEach(voice => {
+            if (!filterLang && availableVoices.length > 0) { // Si no hay idioma de filtro, mostrar mensaje o todas las voces
+                 const placeholderOption = document.createElement('option');
+                 placeholderOption.textContent = "Seleccione un idioma";
+                 placeholderOption.disabled = true;
+                 voiceSelectorElement.appendChild(placeholderOption);
+                 updateUtteranceLangFromSelection(); // Ajustar el idioma del utterance
+                 return;
+            }
+            
+            const filteredVoices = availableVoices.filter(voice => voice.lang.startsWith(filterLang));
+
+            if (filteredVoices.length === 0) {
+                const noVoiceOption = document.createElement('option');
+                noVoiceOption.value = ""; // Para que no parezca una voz seleccionable
+                noVoiceOption.textContent = "No hay voces para este idioma";
+                noVoiceOption.disabled = true;
+                voiceSelectorElement.appendChild(noVoiceOption);
+                updateUtteranceLangFromSelection();
+                return;
+            }
+            
+            filteredVoices.forEach(voice => {
                 const option = document.createElement('option');
                 option.textContent = `${voice.name} (${voice.lang})`;
                 option.value = voice.name;
-                option.setAttribute('data-lang', voice.lang);
+                option.setAttribute('data-lang', voice.lang); 
                 voiceSelectorElement.appendChild(option);
             });
             
             if (previouslySelectedVoiceName) {
-                const voiceExists = availableVoices.some(v => v.name === previouslySelectedVoiceName);
-                if (voiceExists) {
+                const voiceExistsInFiltered = filteredVoices.some(v => v.name === previouslySelectedVoiceName);
+                if (voiceExistsInFiltered) {
                     voiceSelectorElement.value = previouslySelectedVoiceName;
                 } else {
-                    ttsSettings.voiceName = ""; // Reset si la voz no se encuentra
+                    // La voz guardada no corresponde al idioma filtrado, se seleccionará "Voz por defecto"
+                    ttsSettings.selectedVoiceName = ""; 
                 }
             }
-             // Sincronizar ttsSettings.lang con la voz seleccionada (o la por defecto)
-            const selectedOption = voiceSelectorElement.options[voiceSelectorElement.selectedIndex];
-            if (selectedOption && selectedOption.value) {
-                 ttsSettings.lang = selectedOption.getAttribute('data-lang') || 'es-ES';
-            } else {
-                 ttsSettings.lang = localStorage.getItem('ttsLang') || 'es-ES'; // Si es "por defecto", mantener el lang guardado o un default
+            updateUtteranceLangFromSelection(); 
+        }
+        
+        function updateUtteranceLangFromSelection() {
+            if (!voiceSelectorElement) return;
+            const selectedVoiceOption = voiceSelectorElement.options[voiceSelectorElement.selectedIndex];
+            if (selectedVoiceOption && selectedVoiceOption.value !== "" && selectedVoiceOption.dataset.lang) { 
+                ttsSettings.utteranceLang = selectedVoiceOption.dataset.lang;
+            } else { 
+                ttsSettings.utteranceLang = ttsSettings.userPreferredLang || getBrowserBaseLanguage();
             }
         }
 
         function loadTTSSettingsFromLocalStorage() {
-            ttsSettings.voiceName = localStorage.getItem('ttsVoiceName') || '';
-            ttsSettings.lang = localStorage.getItem('ttsLang') || 'es-ES'; // Este lang se refinará si se selecciona una voz específica
+            ttsSettings.userPreferredLang = localStorage.getItem('ttsUserPreferredLang') || getBrowserBaseLanguage();
+            ttsSettings.selectedVoiceName = localStorage.getItem('ttsSelectedVoiceName') || '';
+            // utteranceLang se carga aquí, pero se refinará después de cargar voces y seleccionar una
+            ttsSettings.utteranceLang = localStorage.getItem('ttsUtteranceLang') || ttsSettings.userPreferredLang;
             ttsSettings.rate = parseFloat(localStorage.getItem('ttsRate') || 1.0);
             ttsSettings.pitch = parseFloat(localStorage.getItem('ttsPitch') || 1.0);
             ttsSettings.volume = parseFloat(localStorage.getItem('ttsVolume') || 1.0);
@@ -364,38 +449,35 @@
                 voiceVolumeElement.value = ttsSettings.volume;
                 if (voiceVolumeValueElement) voiceVolumeValueElement.textContent = ttsSettings.volume.toFixed(1);
             }
-            // El voiceSelector se actualiza en populateVoiceSelector y después en initializeTTS
         }
         
         function initializeTTS() {
-            if (typeof speechSynthesis === 'undefined') return; // Salir si speechSynthesis no está disponible
+            if (typeof speechSynthesis === 'undefined') {
+                console.warn("Speech Synthesis no soportado.");
+                [ttsLanguageSelectorElement, voiceSelectorElement, voiceRateElement, voicePitchElement, voiceVolumeElement].forEach(el => {
+                    if (el) el.disabled = true;
+                });
+                if(ttsLanguageSelectorElement) ttsLanguageSelectorElement.innerHTML = '<option value="">TTS no disponible</option>';
+                if(voiceSelectorElement) voiceSelectorElement.innerHTML = '<option value="">TTS no disponible</option>';
+                return;
+            }
 
-            loadTTSSettingsFromLocalStorage(); // Cargar primero las configuraciones guardadas
+            loadTTSSettingsFromLocalStorage(); // Cargar primero las configuraciones de localStorage
 
             availableVoices = window.speechSynthesis.getVoices();
-            populateVoiceSelector(); // Poblar y intentar seleccionar la voz basada en ttsSettings
-
-            // Asegurar que el selector y ttsSettings.lang estén sincronizados después de cargar voces
-            if (voiceSelectorElement && ttsSettings.voiceName) {
-                const voiceExists = availableVoices.some(v => v.name === ttsSettings.voiceName);
-                if (voiceExists) {
-                    voiceSelectorElement.value = ttsSettings.voiceName;
-                    const selectedVoiceObject = availableVoices.find(v => v.name === ttsSettings.voiceName);
-                    if (selectedVoiceObject) ttsSettings.lang = selectedVoiceObject.lang;
-                } else {
-                    ttsSettings.voiceName = ''; // La voz guardada no existe, usar por defecto
-                    voiceSelectorElement.value = ''; // Seleccionar "Voz por defecto"
-                    ttsSettings.lang = localStorage.getItem('ttsLang') || 'es-ES'; // Reintentar cargar lang o usar default
-                }
-            } else if (voiceSelectorElement) { // Si no hay voiceName guardado, asegurar que el selector está en "por defecto"
-                voiceSelectorElement.value = '';
-                ttsSettings.lang = localStorage.getItem('ttsLang') || 'es-ES';
+            if (availableVoices.length > 0) {
+                populateLanguageSelector(); // Poblar idiomas y seleccionar el guardado/default. Esto actualiza ttsSettings.userPreferredLang.
+                populateVoiceSelector();    // Poblar voces filtradas por userPreferredLang y seleccionar la guardada/default. Esto actualiza ttsSettings.utteranceLang.
+            } else {
+                // Si las voces no están listas, onvoiceschanged se encargará
+                if(ttsLanguageSelectorElement) ttsLanguageSelectorElement.innerHTML = '<option value="">Cargando idiomas...</option>';
+                if(voiceSelectorElement) voiceSelectorElement.innerHTML = '<option value="">Cargando voces...</option>';
             }
         }
 
-        function speak(text) {
+        function speak(text) { 
             if (!('speechSynthesis' in window)) {
-                console.warn('Text-to-Speech no es soportado en este navegador.');
+                console.warn('Text-to-Speech no es soportado.');
                 alert('Tu navegador no soporta la función de voz.');
                 return;
             }
@@ -403,17 +485,19 @@
 
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.text = text;
-            utterance.lang = ttsSettings.lang; 
+            utterance.lang = ttsSettings.utteranceLang; 
             utterance.rate = ttsSettings.rate;
             utterance.pitch = ttsSettings.pitch;
             utterance.volume = ttsSettings.volume;
 
-            if (ttsSettings.voiceName) {
-                const voice = availableVoices.find(v => v.name === ttsSettings.voiceName);
+            if (ttsSettings.selectedVoiceName) {
+                const voice = availableVoices.find(v => v.name === ttsSettings.selectedVoiceName);
                 if (voice) {
                     utterance.voice = voice;
+                    // Asegurar que el lang del utterance coincida con el de la voz seleccionada si es específica
+                    utterance.lang = voice.lang; 
                 } else {
-                    console.warn(`Voz "${ttsSettings.voiceName}" no encontrada. Usando voz por defecto para ${ttsSettings.lang}.`);
+                    console.warn(`Voz "${ttsSettings.selectedVoiceName}" no encontrada. Usando voz por defecto para ${ttsSettings.utteranceLang}.`);
                 }
             }
             
@@ -427,7 +511,6 @@
                 console.error(`Error: No se encontró la columna con ID ${columnId}`);
                 return;
             }
-
             imageData.forEach(imgData => {
                 const img = document.createElement('img');
                 img.src = imgData.src;
@@ -464,36 +547,25 @@
             console.error("Error: No se encontró el elemento #main-screen.");
         }
         
-        loadImage('fase1-col1', fase1ImageData.col1);
-        loadImage('fase1-col2', fase1ImageData.col2);
-        loadImage('fase1-col3', fase1ImageData.col3);
+        if (document.getElementById('fase1-col1')) loadImage('fase1-col1', fase1ImageData.col1);
+        if (document.getElementById('fase1-col2')) loadImage('fase1-col2', fase1ImageData.col2);
+        if (document.getElementById('fase1-col3')) loadImage('fase1-col3', fase1ImageData.col3);
 
         // Cargar tema guardado
         const savedTheme = localStorage.getItem('theme') || 'system';
         if (themeSelector) themeSelector.value = savedTheme;
         applyTheme(savedTheme);
 
-        // Inicializar TTS (esto ahora incluye cargar settings y poblar el selector de voz)
-        if (typeof speechSynthesis !== 'undefined') {
-            if (speechSynthesis.onvoiceschanged !== undefined) {
-                speechSynthesis.onvoiceschanged = initializeTTS;
-            }
-            initializeTTS(); // Llamada inicial
-        } else {
-            // Deshabilitar controles de voz si TTS no es soportado
-            if(voiceSelectorElement) voiceSelectorElement.disabled = true;
-            if(voiceRateElement) voiceRateElement.disabled = true;
-            if(voicePitchElement) voicePitchElement.disabled = true;
-            if(voiceVolumeElement) voiceVolumeElement.disabled = true;
-            console.warn("Speech Synthesis no soportado, controles de voz deshabilitados.");
+        // Inicializar TTS
+        if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = initializeTTS;
         }
+        initializeTTS();
+
 
         // --- Event Listeners ---
         if (hamburgerBtn) {
-            hamburgerBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggleOptionsMenu(true);
-            });
+             hamburgerBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleOptionsMenu(true); });
         }
         if (closeOptionsBtn) closeOptionsBtn.addEventListener('click', () => toggleOptionsMenu(false));
         if (optionsOverlay) optionsOverlay.addEventListener('click', () => toggleOptionsMenu(false));
@@ -515,25 +587,38 @@
             });
         }
 
+        if (ttsLanguageSelectorElement) {
+            ttsLanguageSelectorElement.addEventListener('change', function() {
+                ttsSettings.userPreferredLang = this.value;
+                ttsSettings.selectedVoiceName = ""; // Resetear voz al cambiar idioma de filtro
+                populateVoiceSelector(); // Repoblar voces con el nuevo filtro
+            });
+        }
+         // Listener para el selector de voz, para actualizar utteranceLang inmediatamente si es necesario
+        if (voiceSelectorElement) {
+            voiceSelectorElement.addEventListener('change', function() {
+                ttsSettings.selectedVoiceName = this.value;
+                updateUtteranceLangFromSelection(); // Actualiza ttsSettings.utteranceLang
+            });
+        }
+
+
         if (applyChangesBtn) {
             applyChangesBtn.addEventListener('click', () => {
                 if(themeSelector) applyTheme(themeSelector.value);
 
-                if (voiceSelectorElement) {
-                    const selectedOption = voiceSelectorElement.options[voiceSelectorElement.selectedIndex];
-                    ttsSettings.voiceName = selectedOption.value; 
-                    if (selectedOption.value && selectedOption.dataset.lang) { // Si se seleccionó una voz específica
-                        ttsSettings.lang = selectedOption.dataset.lang;
-                    } else { // "Voz por defecto" o una voz sin data-lang (improbable si se pobló bien)
-                        ttsSettings.lang = localStorage.getItem('ttsLangOriginal') || 'es-ES'; // Mantener un lang general o por defecto
-                    }
+                if (ttsLanguageSelectorElement) ttsSettings.userPreferredLang = ttsLanguageSelectorElement.value;
+                if (voiceSelectorElement) { // Asegurar que selectedVoiceName esté actualizado
+                    ttsSettings.selectedVoiceName = voiceSelectorElement.value;
+                    updateUtteranceLangFromSelection(); // Y utteranceLang también
                 }
                 if (voiceRateElement) ttsSettings.rate = parseFloat(voiceRateElement.value);
                 if (voicePitchElement) ttsSettings.pitch = parseFloat(voicePitchElement.value);
                 if (voiceVolumeElement) ttsSettings.volume = parseFloat(voiceVolumeElement.value);
 
-                localStorage.setItem('ttsVoiceName', ttsSettings.voiceName);
-                localStorage.setItem('ttsLang', ttsSettings.lang); // Guardar el lang asociado a la voz
+                localStorage.setItem('ttsUserPreferredLang', ttsSettings.userPreferredLang);
+                localStorage.setItem('ttsSelectedVoiceName', ttsSettings.selectedVoiceName);
+                localStorage.setItem('ttsUtteranceLang', ttsSettings.utteranceLang);
                 localStorage.setItem('ttsRate', ttsSettings.rate.toString());
                 localStorage.setItem('ttsPitch', ttsSettings.pitch.toString());
                 localStorage.setItem('ttsVolume', ttsSettings.volume.toString());
@@ -542,9 +627,11 @@
             });
         }
         
-        backToMainBtns.forEach(btn => {
-            btn.addEventListener('click', () => showScreen('main-screen'));
-        });
+        if (backToMainBtns) {
+            backToMainBtns.forEach(btn => {
+                btn.addEventListener('click', () => showScreen('main-screen'));
+            });
+        }
 
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
             if (themeSelector && themeSelector.value === 'system') {
@@ -552,7 +639,6 @@
             }
         });
 
-        // Registrar Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('service-worker.js')
