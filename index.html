@@ -281,7 +281,8 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+        // MODIFIED: Added async to DOMContentLoaded callback
+    document.addEventListener('DOMContentLoaded', async () => {
         // --- Selectores de Elementos ---
         const appContainer = document.getElementById('app-container');
         const mainScreen = document.getElementById('main-screen');
