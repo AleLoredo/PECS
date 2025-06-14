@@ -345,12 +345,21 @@
                 const data = {};
 
                 for (let i = 1; i < lines.length; i++) {
+                    // ---- DETAILED LOGGING FOR FASE1 START ----
+                    const current_line_content_for_debug = lines[i];
+                    // ---- DETAILED LOGGING FOR FASE1 END ----
                     const values = lines[i].split(','); // No trim here, handle if values can have spaces
                     const entry = {};
                     headers.forEach((header, index) => {
                         entry[header] = values[index] ? values[index].trim() : "";
                     });
 
+                    // ---- DETAILED LOGGING FOR FASE1 START ----
+                    if (entry.fase_id === "fase1") {
+                        console.log("Processing entry for fase1:", JSON.parse(JSON.stringify(entry)), "Raw line:", current_line_content_for_debug);
+                        console.log("Check conditions for fase1 item: item_id=", entry.item_id, "image_url=", entry.image_url);
+                    }
+                    // ---- DETAILED LOGGING FOR FASE1 END ----
                     if (!entry.fase_id || !entry.collection_id) continue;
 
                     if (!data[entry.fase_id]) {
@@ -369,12 +378,21 @@
                         });
                     }
                 }
+                    // ---- DETAILED LOGGING FOR FASE1 START ----
+                    if (data.fase1) {
+                        console.log("Final data object for fase1 before assignment:", JSON.parse(JSON.stringify(data.fase1)));
+                    } else {
+                        console.log("No data.fase1 object was created.");
+                    }
+                    // ---- DETAILED LOGGING FOR FASE1 END ----
                 appData.allFasesData = data;
                 console.log("Fase data loaded and parsed:", appData.allFasesData);
+                    console.log("loadFaseDataFromCSV successfully parsed. Returning true.");
                 return true;
             } catch (error) {
                 console.error("Failed to load or parse CSV data:", error);
                 appData.allFasesData = {};
+                    console.log("loadFaseDataFromCSV encountered an issue. Returning false.");
                 return false;
             }
         }
