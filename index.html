@@ -141,11 +141,81 @@
             </main>
         </div>
 
-        <div id="fase-2-screen" class="screen hidden items-center justify-center text-3xl"><header class="p-4 bg-yellow-500 dark:bg-yellow-700 text-white flex justify-between items-center shadow-md sticky top-0 z-10 w-full"><button class="back-to-main p-2 rounded-md hover:bg-yellow-600 dark:hover:bg-yellow-800 focus:outline-none focus:ring-2 focus:ring-white" aria-label="Volver al menú principal"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button><h1 class="text-2xl font-bold">Fase 2</h1><div class="w-7 h-7"></div></header><main class="flex-grow flex items-center justify-center">Contenido Fase 2</main></div>
-        <div id="fase-3-screen" class="screen hidden items-center justify-center text-3xl"><header class="p-4 bg-purple-500 dark:bg-purple-700 text-white flex justify-between items-center shadow-md sticky top-0 z-10 w-full"><button class="back-to-main p-2 rounded-md hover:bg-purple-600 dark:hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-white" aria-label="Volver al menú principal"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button><h1 class="text-2xl font-bold">Fase 3</h1><div class="w-7 h-7"></div></header><main class="flex-grow flex items-center justify-center">Contenido Fase 3</main></div>
-        <div id="fase-4-screen" class="screen hidden items-center justify-center text-3xl"><header class="p-4 bg-pink-500 dark:bg-pink-700 text-white flex justify-between items-center shadow-md sticky top-0 z-10 w-full"><button class="back-to-main p-2 rounded-md hover:bg-pink-600 dark:hover:bg-pink-800 focus:outline-none focus:ring-2 focus:ring-white" aria-label="Volver al menú principal"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button><h1 class="text-2xl font-bold">Fase 4</h1><div class="w-7 h-7"></div></header><main class="flex-grow flex items-center justify-center">Contenido Fase 4</main></div>
-        <div id="fase-5-screen" class="screen hidden items-center justify-center text-3xl"><header class="p-4 bg-indigo-500 dark:bg-indigo-700 text-white flex justify-between items-center shadow-md sticky top-0 z-10 w-full"><button class="back-to-main p-2 rounded-md hover:bg-indigo-600 dark:hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-white" aria-label="Volver al menú principal"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button><h1 class="text-2xl font-bold">Fase 5</h1><div class="w-7 h-7"></div></header><main class="flex-grow flex items-center justify-center">Contenido Fase 5</main></div>
-        <div id="fase-6-screen" class="screen hidden items-center justify-center text-3xl"><header class="p-4 bg-teal-500 dark:bg-teal-700 text-white flex justify-between items-center shadow-md sticky top-0 z-10 w-full"><button class="back-to-main p-2 rounded-md hover:bg-teal-600 dark:hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-white" aria-label="Volver al menú principal"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button><h1 class="text-2xl font-bold">Fase 6</h1><div class="w-7 h-7"></div></header><main class="flex-grow flex items-center justify-center">Contenido Fase 6</main></div>
+        <div id="fase-2-screen" class="screen hidden">
+            <header class="p-4 bg-yellow-500 dark:bg-yellow-700 text-white flex justify-between items-center shadow-md sticky top-0 z-10 w-full"><button class="back-to-main p-2 rounded-md hover:bg-yellow-600 dark:hover:bg-yellow-800 focus:outline-none focus:ring-2 focus:ring-white" aria-label="Volver al menú principal"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button><h1 class="text-2xl font-bold">Fase 2</h1><div class="w-7 h-7"></div></header>
+            <main class="flex-grow flex justify-center items-start pt-4 pb-4 sm:pt-6 sm:pb-6" style="padding-left: calc(100vw / 30); padding-right: calc(100vw / 30);">
+                <div class="flex w-full h-[90vh]" style="gap: calc(100vw / 60);">
+                    <div id="fase2-col1" class="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-y-auto p-3 space-y-4" style="width: 30vw; height: 100%;">
+                        </div>
+                    <div class="separator-line"></div>
+                    <div id="fase2-col2" class="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-y-auto p-3 space-y-4" style="width: 30vw; height: 100%;">
+                        </div>
+                    <div class="separator-line"></div>
+                    <div id="fase2-col3" class="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-y-auto p-3 space-y-4" style="width: 30vw; height: 100%;">
+                        </div>
+                </div>
+            </main>
+        </div>
+        <div id="fase-3-screen" class="screen hidden">
+            <header class="p-4 bg-purple-500 dark:bg-purple-700 text-white flex justify-between items-center shadow-md sticky top-0 z-10 w-full"><button class="back-to-main p-2 rounded-md hover:bg-purple-600 dark:hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-white" aria-label="Volver al menú principal"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button><h1 class="text-2xl font-bold">Fase 3</h1><div class="w-7 h-7"></div></header>
+            <main class="flex-grow flex justify-center items-start pt-4 pb-4 sm:pt-6 sm:pb-6" style="padding-left: calc(100vw / 30); padding-right: calc(100vw / 30);">
+                <div class="flex w-full h-[90vh]" style="gap: calc(100vw / 60);">
+                    <div id="fase3-col1" class="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-y-auto p-3 space-y-4" style="width: 30vw; height: 100%;">
+                        </div>
+                    <div class="separator-line"></div>
+                    <div id="fase3-col2" class="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-y-auto p-3 space-y-4" style="width: 30vw; height: 100%;">
+                        </div>
+                    <div class="separator-line"></div>
+                    <div id="fase3-col3" class="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-y-auto p-3 space-y-4" style="width: 30vw; height: 100%;">
+                        </div>
+                </div>
+            </main>
+        </div>
+        <div id="fase-4-screen" class="screen hidden">
+            <header class="p-4 bg-pink-500 dark:bg-pink-700 text-white flex justify-between items-center shadow-md sticky top-0 z-10 w-full"><button class="back-to-main p-2 rounded-md hover:bg-pink-600 dark:hover:bg-pink-800 focus:outline-none focus:ring-2 focus:ring-white" aria-label="Volver al menú principal"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button><h1 class="text-2xl font-bold">Fase 4</h1><div class="w-7 h-7"></div></header>
+            <main class="flex-grow flex justify-center items-start pt-4 pb-4 sm:pt-6 sm:pb-6" style="padding-left: calc(100vw / 30); padding-right: calc(100vw / 30);">
+                <div class="flex w-full h-[90vh]" style="gap: calc(100vw / 60);">
+                    <div id="fase4-col1" class="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-y-auto p-3 space-y-4" style="width: 30vw; height: 100%;">
+                        </div>
+                    <div class="separator-line"></div>
+                    <div id="fase4-col2" class="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-y-auto p-3 space-y-4" style="width: 30vw; height: 100%;">
+                        </div>
+                    <div class="separator-line"></div>
+                    <div id="fase4-col3" class="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-y-auto p-3 space-y-4" style="width: 30vw; height: 100%;">
+                        </div>
+                </div>
+            </main>
+        </div>
+        <div id="fase-5-screen" class="screen hidden">
+            <header class="p-4 bg-indigo-500 dark:bg-indigo-700 text-white flex justify-between items-center shadow-md sticky top-0 z-10 w-full"><button class="back-to-main p-2 rounded-md hover:bg-indigo-600 dark:hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-white" aria-label="Volver al menú principal"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button><h1 class="text-2xl font-bold">Fase 5</h1><div class="w-7 h-7"></div></header>
+            <main class="flex-grow flex justify-center items-start pt-4 pb-4 sm:pt-6 sm:pb-6" style="padding-left: calc(100vw / 30); padding-right: calc(100vw / 30);">
+                <div class="flex w-full h-[90vh]" style="gap: calc(100vw / 60);">
+                    <div id="fase5-col1" class="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-y-auto p-3 space-y-4" style="width: 30vw; height: 100%;">
+                        </div>
+                    <div class="separator-line"></div>
+                    <div id="fase5-col2" class="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-y-auto p-3 space-y-4" style="width: 30vw; height: 100%;">
+                        </div>
+                    <div class="separator-line"></div>
+                    <div id="fase5-col3" class="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-y-auto p-3 space-y-4" style="width: 30vw; height: 100%;">
+                        </div>
+                </div>
+            </main>
+        </div>
+        <div id="fase-6-screen" class="screen hidden">
+            <header class="p-4 bg-teal-500 dark:bg-teal-700 text-white flex justify-between items-center shadow-md sticky top-0 z-10 w-full"><button class="back-to-main p-2 rounded-md hover:bg-teal-600 dark:hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-white" aria-label="Volver al menú principal"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button><h1 class="text-2xl font-bold">Fase 6</h1><div class="w-7 h-7"></div></header>
+            <main class="flex-grow flex justify-center items-start pt-4 pb-4 sm:pt-6 sm:pb-6" style="padding-left: calc(100vw / 30); padding-right: calc(100vw / 30);">
+                <div class="flex w-full h-[90vh]" style="gap: calc(100vw / 60);">
+                    <div id="fase6-col1" class="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-y-auto p-3 space-y-4" style="width: 30vw; height: 100%;">
+                        </div>
+                    <div class="separator-line"></div>
+                    <div id="fase6-col2" class="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-y-auto p-3 space-y-4" style="width: 30vw; height: 100%;">
+                        </div>
+                    <div class="separator-line"></div>
+                    <div id="fase6-col3" class="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-y-auto p-3 space-y-4" style="width: 30vw; height: 100%;">
+                        </div>
+                </div>
+            </main>
+        </div>
 
     </div>
 
@@ -249,31 +319,64 @@
         };
         let availableVoices = []; // Almacenará las voces cargadas
 
-        // --- Datos de Imágenes para Fase 1 ---
-        const fase1ImageData = {
-            col1: [
-                { src: 'https://cdn-icons-png.flaticon.com/512/3003/3003740.png', speech: 'mano', alt: 'Icono de mano saludando' },
-                { src: 'https://cdn-icons-png.flaticon.com/512/2361/2361750.png', speech: 'ojo', alt: 'Icono de ojo' },
-                { src: 'https://cdn-icons-png.flaticon.com/512/1533/1533829.png', speech: 'boca', alt: 'Icono de boca' },
-                { src: 'https://cdn-icons-png.flaticon.com/512/2290/2290806.png', speech: 'nariz', alt: 'Icono de nariz' },
-                { src: 'https://cdn-icons-png.flaticon.com/512/2290/2290800.png', speech: 'oreja', alt: 'Icono de oreja' },
-                { src: 'https://cdn-icons-png.flaticon.com/512/10096/10096991.png', speech: 'pie', alt: 'Icono de pie' }
-            ],
-            col2: [
-                { src: 'https://cdn-icons-png.flaticon.com/512/1020/1020210.png', speech: 'juguete', alt: 'Icono de bloques de juguete' },
-                { src: 'https://cdn-icons-png.flaticon.com/512/1166/1166907.png', speech: 'pelota', alt: 'Icono de pelota de playa' },
-                { src: 'https://cdn-icons-png.flaticon.com/512/3202/3202926.png', speech: 'auto', alt: 'Icono de auto' },
-                { src: 'https://cdn-icons-png.flaticon.com/512/9107/9107917.png', speech: 'perro', alt: 'Icono de perro' },
-                { src: 'https://cdn-icons-png.flaticon.com/512/1998/1998709.png', speech: 'caballo', alt: 'Icono de caballo' }
-            ],
-            col3: [
-                { src: 'https://cdn-icons-png.flaticon.com/512/415/415733.png', speech: 'manzana', alt: 'Icono de manzana' },
-                { src: 'https://cdn-icons-png.flaticon.com/512/2070/2070223.png', speech: 'banana', alt: 'Icono de banana' },
-                { src: 'https://cdn-icons-png.flaticon.com/512/608/608969.png', speech: 'agua', alt: 'Icono de vaso de agua' },
-                { src: 'https://cdn-icons-png.flaticon.com/512/2936/2936991.png', speech: 'pis', alt: 'Icono de charco (pis)' },
-                { src: 'https://cdn-icons-png.flaticon.com/512/2966/2966008.png', speech: 'caca', alt: 'Icono de emoji de caca' }
-            ]
+        // --- Global App Data Store ---
+        const appData = {
+            allFasesData: {} // Will be populated from CSV
         };
+
+        // --- CSV Loading and Parsing ---
+        async function loadFaseDataFromCSV() {
+            const lang = ttsSettings.userPreferredLang || getBrowserBaseLanguage();
+            const fileName = lang.startsWith("es") ? "esp_fase_data.csv" : "eng_fase_data.csv";
+            console.log(`Loading data from ${fileName}`);
+
+            try {
+                const response = await fetch(fileName);
+                if (!response.ok) {
+                    console.error(`Error fetching ${fileName}: ${response.statusText}`);
+                    appData.allFasesData = {}; // Clear or set to default empty structure
+                    return false;
+                }
+                const csvText = await response.text();
+                const lines = csvText.trim().split('\n');
+                if (lines.length < 1) { console.error("CSV file is empty or invalid"); appData.allFasesData = {}; return false; }
+                const headers = lines[0].split(',').map(header => header.trim());
+                const data = {};
+
+                for (let i = 1; i < lines.length; i++) {
+                    const values = lines[i].split(','); // No trim here, handle if values can have spaces
+                    const entry = {};
+                    headers.forEach((header, index) => {
+                        entry[header] = values[index] ? values[index].trim() : "";
+                    });
+
+                    if (!entry.fase_id || !entry.collection_id) continue;
+
+                    if (!data[entry.fase_id]) {
+                        data[entry.fase_id] = {};
+                    }
+                    if (!data[entry.fase_id][entry.collection_id]) {
+                        data[entry.fase_id][entry.collection_id] = [];
+                    }
+
+                    if (entry.item_id && entry.image_url) { // Ensure essential item data exists
+                         data[entry.fase_id][entry.collection_id].push({
+                            item_id: entry.item_id,
+                            src: entry.image_url,
+                            speech: entry.speech_text,
+                            alt: entry.alt_text
+                        });
+                    }
+                }
+                appData.allFasesData = data;
+                console.log("Fase data loaded and parsed:", appData.allFasesData);
+                return true;
+            } catch (error) {
+                console.error("Failed to load or parse CSV data:", error);
+                appData.allFasesData = {};
+                return false;
+            }
+        }
 
         // --- Funciones ---
         function showScreen(screenId) {
@@ -282,6 +385,10 @@
                 if (screen.id === screenId) {
                     screen.classList.remove('hidden');
                     screen.classList.add('active-screen');
+                    if (screen.id.startsWith("fase-") && screen.id.endsWith("-screen")) {
+                        const faseId = screen.id.substring(0, screen.id.indexOf("-screen"));
+                        displayFaseContent(faseId);
+                    }
                 } else {
                     screen.classList.add('hidden');
                     screen.classList.remove('active-screen');
@@ -507,26 +614,51 @@
             window.speechSynthesis.speak(utterance);
         }
         
-        function loadImage(columnId, imageData) {
-            const columnElement = document.getElementById(columnId);
-            if (!columnElement) {
-                console.error(`Error: No se encontró la columna con ID ${columnId}`);
+        function displayFaseContent(faseId) {
+            console.log(`Displaying content for ${faseId}`);
+            const faseData = appData.allFasesData[faseId];
+
+            if (!faseData) {
+                console.warn(`No data found for ${faseId}. Clearing content.`);
+                // Optionally clear content for all potential columns if structure is known
+                for (let i = 1; i <= 3; i++) { // Assuming max 3 columns for now
+                    const columnElement = document.getElementById(`${faseId}-col${i}`);
+                    if (columnElement) columnElement.innerHTML = "";
+                }
                 return;
             }
-            imageData.forEach(imgData => {
-                const img = document.createElement('img');
-                img.src = imgData.src;
-                img.alt = imgData.alt;
-                img.className = 'fase-image';
-                img.dataset.speech = imgData.speech;
-                img.onerror = function() {
-                    this.onerror=null;
-                    const placeholderSize = Math.round(window.innerHeight * 0.2);
-                    this.src=`https://placehold.co/${placeholderSize}x${placeholderSize}/cccccc/969696?text=Error`;
-                    this.alt = 'Error al cargar imagen';
-                };
-                img.addEventListener('click', () => speak(imgData.speech));
-                columnElement.appendChild(img);
+
+            Object.keys(faseData).forEach(collectionId => {
+                const columnElement = document.getElementById(`${faseId}-${collectionId}`);
+                const imageData = faseData[collectionId];
+
+                if (!columnElement) {
+                    console.warn(`Column element not found: ${faseId}-${collectionId}`);
+                    return; // Skip this collection if its DOM element doesnt exist
+                }
+                columnElement.innerHTML = ""; // Clear previous content
+
+                if (imageData && imageData.length > 0) {
+                    imageData.forEach(imgData => {
+                        if (!imgData.src) return; // Skip if no image source
+                        const img = document.createElement("img");
+                        img.src = imgData.src;
+                        img.alt = imgData.alt;
+                        img.className = "fase-image"; // Existing class for styling
+                        img.dataset.speech = imgData.speech;
+                        img.onerror = function() {
+                            this.onerror=null;
+                            const placeholderSize = Math.round(window.innerHeight * 0.2);
+                            this.src=`https://placehold.co/${placeholderSize}x${placeholderSize}/cccccc/969696?text=Error`;
+                            this.alt = "Error al cargar imagen";
+                        };
+                        img.addEventListener("click", () => speak(imgData.speech));
+                        columnElement.appendChild(img);
+                    });
+                } else {
+                    // console.log(`No items for ${faseId}-${collectionId}`);
+                    // columnElement.innerHTML = "<p class=\"text-sm text-gray-500\">No items available.</p>"; // Optional: display message
+                }
             });
         }
 
@@ -549,10 +681,6 @@
             console.error("Error: No se encontró el elemento #main-screen.");
         }
         
-        if (document.getElementById('fase1-col1')) loadImage('fase1-col1', fase1ImageData.col1);
-        if (document.getElementById('fase1-col2')) loadImage('fase1-col2', fase1ImageData.col2);
-        if (document.getElementById('fase1-col3')) loadImage('fase1-col3', fase1ImageData.col3);
-
         // Cargar tema guardado
         const savedTheme = localStorage.getItem('theme') || 'system';
         if (themeSelector) themeSelector.value = savedTheme;
@@ -563,6 +691,17 @@
             speechSynthesis.onvoiceschanged = initializeTTS;
         }
         initializeTTS();
+            await loadFaseDataFromCSV(); // Load data after TTS init
+            // Initial render for the currently active fase screen, if any
+            const activeScreenElement = document.querySelector(".screen.active-screen");
+            if (activeScreenElement && activeScreenElement.id.startsWith("fase-") && activeScreenElement.id.endsWith("-screen")) {
+                const initialFaseId = activeScreenElement.id.substring(0, activeScreenElement.id.indexOf("-screen"));
+                if (appData.allFasesData[initialFaseId]) { // Ensure data is loaded
+                   displayFaseContent(initialFaseId);
+                } else {
+                   console.log("Initial fase data not yet available for rendering.");
+                }
+            }
 
 
         // --- Event Listeners ---
@@ -607,12 +746,14 @@
 
         if (applyChangesBtn) {
             applyChangesBtn.addEventListener('click', () => {
+                // -- Additions for dynamic CSV loading on language change --
+                const oldLang = ttsSettings.userPreferredLang; // Capture current lang before update
                 if(themeSelector) applyTheme(themeSelector.value);
 
                 if (ttsLanguageSelectorElement) ttsSettings.userPreferredLang = ttsLanguageSelectorElement.value;
-                if (voiceSelectorElement) { // Asegurar que selectedVoiceName esté actualizado
+                if (voiceSelectorElement) {
                     ttsSettings.selectedVoiceName = voiceSelectorElement.value;
-                    updateUtteranceLangFromSelection(); // Y utteranceLang también
+                    updateUtteranceLangFromSelection();
                 }
                 if (voiceRateElement) ttsSettings.rate = parseFloat(voiceRateElement.value);
                 if (voicePitchElement) ttsSettings.pitch = parseFloat(voicePitchElement.value);
@@ -624,6 +765,23 @@
                 localStorage.setItem('ttsRate', ttsSettings.rate.toString());
                 localStorage.setItem('ttsPitch', ttsSettings.pitch.toString());
                 localStorage.setItem('ttsVolume', ttsSettings.volume.toString());
+
+                // Check if the language preference actually changed
+                const newLang = ttsSettings.userPreferredLang;
+                if (oldLang !== newLang) {
+                    console.log("Language preference changed. Reloading CSV data.");
+                    loadFaseDataFromCSV().then(success => {
+                        if (success) {
+                            const activeScreenElement = document.querySelector(".screen.active-screen");
+                            if (activeScreenElement && activeScreenElement.id.startsWith("fase-") && activeScreenElement.id.endsWith("-screen")) {
+                                const currentFaseId = activeScreenElement.id.substring(0, activeScreenElement.id.indexOf("-screen"));
+                                console.log("Refreshing content for current fase:", currentFaseId);
+                                displayFaseContent(currentFaseId);
+                            }
+                        }
+                    });
+                }
+                // -- End of additions --
 
                 toggleOptionsMenu(false);
             });
