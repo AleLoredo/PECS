@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My PWA</title>
+    <link rel="manifest" href="manifest.json">
+    <!-- Add any other meta tags, icons, or stylesheets here -->
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        h1 { color: #333; }
+        button { padding: 10px 15px; margin-top: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Welcome to My PWA!</h1>
+    <p>This is a simple Progressive Web Application.</p>
+    <p>Current version: <span id="appVersion">1.0.0</span></p>
+    <button id="updateButton" style="display:none;">New Version Available! Click to Update</button>
+
+    <!-- This is where we will register the service worker -->
+    <script src="main.js"></script>
+    <!--
+        We will also need a manifest.json for PWA capabilities,
+        let's create a basic one.
+    -->
+</body>
+</html>
