@@ -405,7 +405,8 @@
                     screen.classList.remove('hidden');
                     screen.classList.add('active-screen');
                     if (screen.id.startsWith("fase-") && screen.id.endsWith("-screen")) {
-                        const faseId = screen.id.substring(0, screen.id.indexOf("-screen"));
+                        // MODIFIED: Ensure faseId matches CSV key format (e.g., "fase1")
+                        const faseId = screen.id.substring(0, screen.id.indexOf("-screen")).replace("-", "");
                         displayFaseContent(faseId);
                     }
                 } else {
