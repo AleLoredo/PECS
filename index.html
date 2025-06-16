@@ -766,11 +766,18 @@
 
         if (applyChangesBtn) {
             applyChangesBtn.addEventListener('click', () => {
-                // -- Additions for dynamic CSV loading on language change --
-                const oldLang = ttsSettings.userPreferredLang; // Capture current lang before update
+                console.log("Apply Changes button clicked.");
+                const langPreviouslyAppliedAndSaved = localStorage.getItem('ttsUserPreferredLang');
+                console.log("Language previously applied and saved (from localStorage):", langPreviouslyAppliedAndSaved);
+
+                // Apply theme immediately
                 if(themeSelector) applyTheme(themeSelector.value);
 
-                if (ttsLanguageSelectorElement) ttsSettings.userPreferredLang = ttsLanguageSelectorElement.value;
+                // Update ttsSettings object from form elements
+                if (ttsLanguageSelectorElement) {
+                    ttsSettings.userPreferredLang = ttsLanguageSelectorElement.value;
+                    console.log("TTS language selector new value being applied to ttsSettings.userPreferredLang:", ttsLanguageSelectorElement.value);
+                }
                 if (voiceSelectorElement) {
                     ttsSettings.selectedVoiceName = voiceSelectorElement.value;
                     updateUtteranceLangFromSelection();
@@ -779,29 +786,31 @@
                 if (voicePitchElement) ttsSettings.pitch = parseFloat(voicePitchElement.value);
                 if (voiceVolumeElement) ttsSettings.volume = parseFloat(voiceVolumeElement.value);
 
+                // Save all new settings to localStorage
                 localStorage.setItem('ttsUserPreferredLang', ttsSettings.userPreferredLang);
                 localStorage.setItem('ttsSelectedVoiceName', ttsSettings.selectedVoiceName);
                 localStorage.setItem('ttsUtteranceLang', ttsSettings.utteranceLang);
                 localStorage.setItem('ttsRate', ttsSettings.rate.toString());
                 localStorage.setItem('ttsPitch', ttsSettings.pitch.toString());
                 localStorage.setItem('ttsVolume', ttsSettings.volume.toString());
+                console.log("New ttsSettings.userPreferredLang saved to localStorage:", ttsSettings.userPreferredLang);
 
-                // Check if the language preference actually changed
-                const newLang = ttsSettings.userPreferredLang;
-                if (oldLang !== newLang) {
-                    console.log("Language preference changed. Reloading CSV data.");
+                // Compare the previously saved language with the newly applied and saved language
+                if (langPreviouslyAppliedAndSaved !== ttsSettings.userPreferredLang) {
+                    console.log(`Language preference changed from ('${langPreviouslyAppliedAndSaved}' or initial page default) to '${ttsSettings.userPreferredLang}'. Reloading CSV data.`);
                     loadFaseDataFromCSV().then(success => {
                         if (success) {
                             const activeScreenElement = document.querySelector(".screen.active-screen");
                             if (activeScreenElement && activeScreenElement.id.startsWith("fase-") && activeScreenElement.id.endsWith("-screen")) {
-                                const currentFaseId = activeScreenElement.id.substring(0, activeScreenElement.id.indexOf("-screen"));
-                                console.log("Refreshing content for current fase:", currentFaseId);
+                                const currentFaseId = activeScreenElement.id.substring(0, activeScreenElement.id.indexOf("-screen")).replace("-", "");
+                                console.log("Refreshing content for current fase after language change:", currentFaseId);
                                 displayFaseContent(currentFaseId);
                             }
                         }
                     });
+                } else {
+                    console.log("Language preference not changed. No CSV reload needed.");
                 }
-                // -- End of additions --
 
                 toggleOptionsMenu(false);
             });
