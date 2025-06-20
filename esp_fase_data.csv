@@ -1,20 +1,23 @@
 fase_id,collection_id,item_id,image_url,speech_text,alt_text
-fase1,col1,item1,https://cdn-icons-png.flaticon.com/512/3003/3003740.png,mano,Icono de mano saludando
-fase1,col1,item2,https://cdn-icons-png.flaticon.com/512/2361/2361750.png,ojo,Icono de ojo
-fase1,col1,item3,https://cdn-icons-png.flaticon.com/512/1533/1533829.png,boca,Icono de boca
-fase1,col1,item4,https://cdn-icons-png.flaticon.com/512/2290/2290806.png,nariz,Icono de nariz
-fase1,col1,item5,https://cdn-icons-png.flaticon.com/512/2290/2290800.png,oreja,Icono de oreja
-fase1,col1,item6,https://cdn-icons-png.flaticon.com/512/10096/10096991.png,pie,Icono de pie
-fase1,col2,item1,https://cdn-icons-png.flaticon.com/512/1020/1020210.png,juguete,Icono de bloques de juguete
-fase1,col2,item2,https://cdn-icons-png.flaticon.com/512/1166/1166907.png,pelota,Icono de pelota de playa
-fase1,col2,item3,https://cdn-icons-png.flaticon.com/512/3202/3202926.png,auto,Icono de auto
-fase1,col2,item4,https://cdn-icons-png.flaticon.com/512/9107/9107917.png,perro,Icono de perro
-fase1,col2,item5,https://cdn-icons-png.flaticon.com/512/1998/1998709.png,caballo,Icono de caballo
+fase1,col1,item1,https://cdn-icons-png.flaticon.com/512/7361/7361098.png,mama,Icono de mama
+fase1,col1,item2,https://cdn-icons-png.flaticon.com/512/3006/3006889.png,papa,Icono de papa
+fase1,col1,item3,https://cdn-icons-png.flaticon.com/512/2309/2309039.png,mano,Icono de mano
+fase1,col1,item4,https://cdn-icons-png.flaticon.com/512/3208/3208786.png,ojo,Icono de ojo
+fase1,col1,item5,https://cdn-icons-png.flaticon.com/512/4702/4702203.png,boca,Icono de boca
+fase1,col1,item6,https://images.icon-icons.com/2353/PNG/512/nose_body_icon_143233.png,nariz,Icono de nariz
+fase1,col1,item7,https://cdn-icons-png.flaticon.com/512/2309/2309038.png,oreja,Icono de oreja
+fase1,col1,item8,https://cdn-icons-png.flaticon.com/512/8889/8889509.png,pie,Icono de pie
+fase1,col2,item1,https://cdn-icons-png.flaticon.com/512/1047/1047711.png,galleta,Icono de galleta
+fase1,col2,item2,https://cdn-icons-png.flaticon.com/512/735/735846.png,jugo,Icono de jugo
+fase1,col2,item3,https://cdn-icons-png.flaticon.com/512/5213/5213913.png,pelota,Icono de pelota de playa
+fase1,col2,item4,https://www.iconarchive.com/download/i141147/microsoft/fluentui-emoji-flat/Sport-Utility-Vehicle-Flat.1024.png,auto,Icono de auto
+fase1,col2,item5,https://cdn-icons-png.flaticon.com/512/1998/1998627.png,perro,Icono de perro
+fase1,col2,item6,https://cdn-icons-png.flaticon.com/512/9537/9537923.png,caballo,Icono de caballo
 fase1,col3,item1,https://cdn-icons-png.flaticon.com/512/415/415733.png,manzana,Icono de manzana
-fase1,col3,item2,https://cdn-icons-png.flaticon.com/512/2070/2070223.png,banana,Icono de banana
-fase1,col3,item3,https://cdn-icons-png.flaticon.com/512/608/608969.png,agua,Icono de vaso de agua
-fase1,col3,item4,https://cdn-icons-png.flaticon.com/512/2936/2936991.png,pis,Icono de charco (pis)
-fase1,col3,item5,https://cdn-icons-png.flaticon.com/512/2966/2966008.png,caca,Icono de emoji de caca
+fase1,col3,item2,https://cdn-icons-png.flaticon.com/512/765/765607.png,banana,Icono de banana
+fase1,col3,item3,https://cdn-icons-png.flaticon.com/512/2209/2209792.png,agua,Icono de vaso de agua
+fase1,col3,item4,https://cdn.iconscout.com/icon/free/png-256/free-pee-icon-download-in-svg-png-gif-file-formats--pis-urinating-wee-nasty-icons-pack-miscellaneous-448047.png,pis,Icono de charco (pis)
+fase1,col3,item5,https://cdn-icons-png.flaticon.com/512/983/983064.png,caca,Icono de emoji de caca
 fase2,col1,,,,
 fase2,col2,,,,
 fase2,col3,,,,
