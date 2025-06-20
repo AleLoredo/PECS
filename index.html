@@ -91,6 +91,18 @@
         color: #111827 !important; /* Tailwind gray-900 */
     }
 
+    /* ---- DIAGNOSTIC: Force light theme on .fase-btn when html is not .dark ---- */
+    html:not(.dark) .fase-btn {
+        background-color: white !important;
+        color: #3B82F6 !important; /* text-blue-500 */
+        border-color: #93C5FD !important; /* border-blue-300 */
+    }
+
+    /* ---- DIAGNOSTIC: Force light theme on fase columns when html is not .dark ---- */
+    html:not(.dark) div[id^="fase"][id*="-col"] {
+        background-color: #E5E7EB !important; /* bg-gray-200 */
+    }
+
 </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans transition-colors duration-300">
