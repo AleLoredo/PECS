@@ -1,35 +1,35 @@
 fase_id,collection_id,item_id,image_url,speech_text,alt_text
-phase1,col1,item1,https://cdn-icons-png.flaticon.com/512/7361/7361098.png,mommy,Icon of mom
-phase1,col1,item2,https://cdn-icons-png.flaticon.com/512/3006/3006889.png,daddy,Icon of dad
-phase1,col1,item3,https://cdn-icons-png.flaticon.com/512/2309/2309039.png,hand,Icon of hand
-phase1,col1,item4,https://cdn-icons-png.flaticon.com/512/3208/3208786.png,eye,Icon of eye
-phase1,col1,item5,https://cdn-icons-png.flaticon.com/512/4702/4702203.png,mouth,Icon of mouth
-phase1,col1,item6,https://images.icon-icons.com/2353/PNG/512/nose_body_icon_143233.png,nose,Icon of nose
-phase1,col1,item7,https://cdn-icons-png.flaticon.com/512/2309/2309038.png,ear,Icon of ear
-phase1,col1,item8,https://cdn-icons-png.flaticon.com/512/8889/8889509.png,foot,Icon of foot
-phase1,col2,item1,https://cdn-icons-png.flaticon.com/512/1047/1047711.png,cookie,Icon of cookie
-phase1,col2,item2,https://cdn-icons-png.flaticon.com/512/735/735846.png,juice,Icon of juice
-phase1,col2,item3,https://cdn-icons-png.flaticon.com/512/5213/5213913.png,ball,Icon of beach ball
-phase1,col2,item4,https://www.iconarchive.com/download/i141147/microsoft/fluentui-emoji-flat/Sport-Utility-Vehicle-Flat.1024.png,car,Icon of car
-phase1,col2,item5,https://cdn-icons-png.flaticon.com/512/1998/1998627.png,dog,Icon of dog
-phase1,col2,item6,https://cdn-icons-png.flaticon.com/512/9537/9537923.png,horse,Icon of horse
-phase1,col3,item1,https://cdn-icons-png.flaticon.com/512/415/415733.png,apple,Icon of apple
-phase1,col3,item2,https://cdn-icons-png.flaticon.com/512/765/765607.png,banana,Icon of banana
-phase1,col3,item3,https://cdn-icons-png.flaticon.com/512/2209/2209792.png,water,Icon of glass of water
-phase1,col3,item4,https://cdn.iconscout.com/icon/free/png-256/free-pee-icon-download-in-svg-png-gif-file-formats--pis-urinating-wee-nasty-icons-pack-miscellaneous-448047.png,pee,Icon of puddle (pee)
-phase1,col3,item5,https://cdn-icons-png.flaticon.com/512/983/983064.png,poop,Icon of poop emoji
-phase2,col1,,,,
-phase2,col2,,,,
-phase2,col3,,,,
-phase3,col1,,,,
-phase3,col2,,,,
-phase3,col3,,,,
-phase4,col1,,,,
-phase4,col2,,,,
-phase4,col3,,,,
-phase5,col1,,,,
-phase5,col2,,,,
-phase5,col3,,,,
-phase6,col1,,,,
-phase6,col2,,,,
-phase6,col3,,,,
+fase1,col1,item1,https://cdn-icons-png.flaticon.com/512/7361/7361098.png,mommy,Icon of mom
+fase1,col1,item2,https://cdn-icons-png.flaticon.com/512/3006/3006889.png,daddy,Icon of dad
+fase1,col1,item3,https://cdn-icons-png.flaticon.com/512/2309/2309039.png,hand,Icon of hand
+fase1,col1,item4,https://cdn-icons-png.flaticon.com/512/3208/3208786.png,eye,Icon of eye
+fase1,col1,item5,https://cdn-icons-png.flaticon.com/512/4702/4702203.png,mouth,Icon of mouth
+fase1,col1,item6,https://images.icon-icons.com/2353/PNG/512/nose_body_icon_143233.png,nose,Icon of nose
+fase1,col1,item7,https://cdn-icons-png.flaticon.com/512/2309/2309038.png,ear,Icon of ear
+fase1,col1,item8,https://cdn-icons-png.flaticon.com/512/8889/8889509.png,foot,Icon of foot
+fase1,col2,item1,https://cdn-icons-png.flaticon.com/512/1047/1047711.png,cookie,Icon of cookie
+fase1,col2,item2,https://cdn-icons-png.flaticon.com/512/735/735846.png,juice,Icon of juice
+fase1,col2,item3,https://cdn-icons-png.flaticon.com/512/5213/5213913.png,ball,Icon of beach ball
+fase1,col2,item4,https://www.iconarchive.com/download/i141147/microsoft/fluentui-emoji-flat/Sport-Utility-Vehicle-Flat.1024.png,car,Icon of car
+fase1,col2,item5,https://cdn-icons-png.flaticon.com/512/1998/1998627.png,dog,Icon of dog
+fase1,col2,item6,https://cdn-icons-png.flaticon.com/512/9537/9537923.png,horse,Icon of horse
+fase1,col3,item1,https://cdn-icons-png.flaticon.com/512/415/415733.png,apple,Icon of apple
+fase1,col3,item2,https://cdn-icons-png.flaticon.com/512/765/765607.png,banana,Icon of banana
+fase1,col3,item3,https://cdn-icons-png.flaticon.com/512/2209/2209792.png,water,Icon of glass of water
+fase1,col3,item4,https://cdn.iconscout.com/icon/free/png-256/free-pee-icon-download-in-svg-png-gif-file-formats--pis-urinating-wee-nasty-icons-pack-miscellaneous-448047.png,pee,Icon of puddle (pee)
+fase1,col3,item5,https://cdn-icons-png.flaticon.com/512/983/983064.png,poop,Icon of poop emoji
+fase2,col1,,,,
+fase2,col2,,,,
+fase2,col3,,,,
+fase3,col1,,,,
+fase3,col2,,,,
+fase3,col3,,,,
+fase4,col1,,,,
+fase4,col2,,,,
+fase4,col3,,,,
+fase5,col1,,,,
+fase5,col2,,,,
+fase5,col3,,,,
+fase6,col1,,,,
+fase6,col2,,,,
+fase6,col3,,,,
