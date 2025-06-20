@@ -1,6 +1,6 @@
 fase_id,collection_id,item_id,image_url,speech_text,alt_text
-phase1,col1,item1,https://cdn-icons-png.flaticon.com/512/7361/7361098.png,mom,Icon of mom
-phase1,col1,item2,https://cdn-icons-png.flaticon.com/512/3006/3006889.png,dad,Icon of dad
+phase1,col1,item1,https://cdn-icons-png.flaticon.com/512/7361/7361098.png,mommy,Icon of mom
+phase1,col1,item2,https://cdn-icons-png.flaticon.com/512/3006/3006889.png,daddy,Icon of dad
 phase1,col1,item3,https://cdn-icons-png.flaticon.com/512/2309/2309039.png,hand,Icon of hand
 phase1,col1,item4,https://cdn-icons-png.flaticon.com/512/3208/3208786.png,eye,Icon of eye
 phase1,col1,item5,https://cdn-icons-png.flaticon.com/512/4702/4702203.png,mouth,Icon of mouth
