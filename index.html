@@ -289,6 +289,13 @@
             <label for="voice-volume" class="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Volumen: <span id="voice-volume-value" class="font-normal">1.0</span></label>
             <input type="range" id="voice-volume" min="0" max="1" step="0.1" value="1.0" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-blue-500 dark:accent-blue-600">
         </div>
+
+        <!-- New Test Button -->
+        <div class="mt-4 mb-4"> <!-- Added margin for spacing -->
+            <button id="tts-test-btn" class="w-full bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-green-400 dark:focus:ring-green-500 transition-colors duration-150">
+                Probar Voz
+            </button>
+        </div>
     </div>
     
     <button id="apply-changes-btn" class="mt-auto w-full bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 transition-colors duration-150">
@@ -326,9 +333,10 @@
         const voiceVolumeValueElement = document.getElementById('voice-volume-value');
         
         const applyChangesBtn = document.getElementById('apply-changes-btn');
+        const ttsTestBtn = document.getElementById('tts-test-btn'); // Added selector for Test button
 
         // --- Configuración Global de TTS ---
-        let ttsSettings = {
+        let acceptedTTSSettings = {
             userPreferredLang: '',   // Idioma base seleccionado por el usuario para filtrar voces (ej: "es", "en")
             selectedVoiceName: '',   // Nombre de la voz específica elegida
             utteranceLang: '',       // Idioma exacto de la voz seleccionada para el utterance (ej: "es-ES", "en-US")
@@ -336,6 +344,7 @@
             pitch: 1.0,
             volume: 1.0
         };
+        let temporaryTTSSettings = {}; // Para cambios pendientes en el menú de opciones
         let availableVoices = []; // Almacenará las voces cargadas
 
         // --- Global App Data Store ---
@@ -345,7 +354,7 @@
 
         // --- CSV Loading and Parsing ---
         async function loadFaseDataFromCSV() {
-            const lang = ttsSettings.userPreferredLang || getBrowserBaseLanguage();
+            const lang = acceptedTTSSettings.userPreferredLang || getBrowserBaseLanguage();
             const fileName = lang.startsWith("es") ? "esp_fase_data.csv" : "eng_fase_data.csv";
             console.log(`Loading data from ${fileName}`);
 
@@ -438,6 +447,24 @@
         function toggleOptionsMenu(show) {
             if (!optionsMenu || !optionsOverlay) return;
             if (show) {
+                temporaryTTSSettings = JSON.parse(JSON.stringify(acceptedTTSSettings));
+
+                if (ttsLanguageSelectorElement) ttsLanguageSelectorElement.value = temporaryTTSSettings.userPreferredLang;
+                if (voiceRateElement) voiceRateElement.value = temporaryTTSSettings.rate;
+                if (voiceRateValueElement) voiceRateValueElement.textContent = temporaryTTSSettings.rate.toFixed(1);
+                if (voicePitchElement) voicePitchElement.value = temporaryTTSSettings.pitch;
+                if (voicePitchValueElement) voicePitchValueElement.textContent = temporaryTTSSettings.pitch.toFixed(1);
+                if (voiceVolumeElement) voiceVolumeElement.value = temporaryTTSSettings.volume;
+                if (voiceVolumeValueElement) voiceVolumeValueElement.textContent = temporaryTTSSettings.volume.toFixed(1);
+
+                populateVoiceSelector(temporaryTTSSettings); // Pass temporary settings
+                if (voiceSelectorElement && temporaryTTSSettings.selectedVoiceName) {
+                    voiceSelectorElement.value = temporaryTTSSettings.selectedVoiceName;
+                }
+                // Ensure utteranceLang is also updated based on the just populated temporary settings
+                updateUtteranceLangFromSelection(temporaryTTSSettings);
+
+
                 optionsOverlay.classList.remove('hidden');
                 optionsMenu.classList.remove('-translate-x-full');
                 optionsMenu.classList.add('translate-x-0');
@@ -527,13 +554,13 @@
                 });
 
                 // Restore previously selected language if it exists in the new list
-                const currentSelectedLang = ttsSettings.userPreferredLang; // Loaded from localStorage
+                const currentSelectedLang = acceptedTTSSettings.userPreferredLang; // Loaded from localStorage
                 if (supportedLanguages.some(lang => lang.code === currentSelectedLang)) {
                     ttsLanguageSelectorElement.value = currentSelectedLang;
                 } else if (supportedLanguages.length > 0) {
                     ttsLanguageSelectorElement.value = supportedLanguages[0].code; // Select first in the filtered list
                 }
-                ttsSettings.userPreferredLang = ttsLanguageSelectorElement.value; // Update global setting
+                acceptedTTSSettings.userPreferredLang = ttsLanguageSelectorElement.value; // Update global setting
                 populateVoiceSelector(); // Refresh voice list based on newly set language
             } catch (error) {
                 console.error("Error in populateLanguageSelector:", error);
@@ -541,11 +568,11 @@
             }
         }
 
-        function populateVoiceSelector() {
+        function populateVoiceSelector(settings = acceptedTTSSettings) { // Added settings parameter
             if (!voiceSelectorElement) return;
             
-            const filterLang = ttsSettings.userPreferredLang;
-            const previouslySelectedVoiceName = ttsSettings.selectedVoiceName;
+            const filterLang = settings.userPreferredLang;
+            const previouslySelectedVoiceName = settings.selectedVoiceName;
             voiceSelectorElement.innerHTML = '';
 
             const defaultOption = document.createElement('option');
@@ -588,42 +615,44 @@
                     voiceSelectorElement.value = previouslySelectedVoiceName;
                 } else {
                     // La voz guardada no corresponde al idioma filtrado, se seleccionará "Voz por defecto"
-                    ttsSettings.selectedVoiceName = ""; 
+                    settings.selectedVoiceName = "";
                 }
             }
-            updateUtteranceLangFromSelection(); 
+            // updateUtteranceLangFromSelection() will be called by the function that calls populateVoiceSelector,
+            // or by the event listener if the user changes the voice selection.
+            // It's important it uses the correct settings object (temporary or accepted).
         }
         
-        function updateUtteranceLangFromSelection() {
+        function updateUtteranceLangFromSelection(settings = acceptedTTSSettings) { // Added settings parameter
             if (!voiceSelectorElement) return;
             const selectedVoiceOption = voiceSelectorElement.options[voiceSelectorElement.selectedIndex];
             if (selectedVoiceOption && selectedVoiceOption.value !== "" && selectedVoiceOption.dataset.lang) { 
-                ttsSettings.utteranceLang = selectedVoiceOption.dataset.lang;
+                settings.utteranceLang = selectedVoiceOption.dataset.lang;
             } else { 
-                ttsSettings.utteranceLang = ttsSettings.userPreferredLang || getBrowserBaseLanguage();
+                settings.utteranceLang = settings.userPreferredLang || getBrowserBaseLanguage();
             }
         }
 
         function loadTTSSettingsFromLocalStorage() {
-            ttsSettings.userPreferredLang = localStorage.getItem('ttsUserPreferredLang') || getBrowserBaseLanguage();
-            ttsSettings.selectedVoiceName = localStorage.getItem('ttsSelectedVoiceName') || '';
+            acceptedTTSSettings.userPreferredLang = localStorage.getItem('ttsUserPreferredLang') || getBrowserBaseLanguage();
+            acceptedTTSSettings.selectedVoiceName = localStorage.getItem('ttsSelectedVoiceName') || '';
             // utteranceLang se carga aquí, pero se refinará después de cargar voces y seleccionar una
-            ttsSettings.utteranceLang = localStorage.getItem('ttsUtteranceLang') || ttsSettings.userPreferredLang;
-            ttsSettings.rate = parseFloat(localStorage.getItem('ttsRate') || 1.0);
-            ttsSettings.pitch = parseFloat(localStorage.getItem('ttsPitch') || 1.0);
-            ttsSettings.volume = parseFloat(localStorage.getItem('ttsVolume') || 1.0);
+            acceptedTTSSettings.utteranceLang = localStorage.getItem('ttsUtteranceLang') || acceptedTTSSettings.userPreferredLang;
+            acceptedTTSSettings.rate = parseFloat(localStorage.getItem('ttsRate') || 1.0);
+            acceptedTTSSettings.pitch = parseFloat(localStorage.getItem('ttsPitch') || 1.0);
+            acceptedTTSSettings.volume = parseFloat(localStorage.getItem('ttsVolume') || 1.0);
 
             if (voiceRateElement) {
-                voiceRateElement.value = ttsSettings.rate;
-                if (voiceRateValueElement) voiceRateValueElement.textContent = ttsSettings.rate.toFixed(1);
+                voiceRateElement.value = acceptedTTSSettings.rate;
+                if (voiceRateValueElement) voiceRateValueElement.textContent = acceptedTTSSettings.rate.toFixed(1);
             }
             if (voicePitchElement) {
-                voicePitchElement.value = ttsSettings.pitch;
-                if (voicePitchValueElement) voicePitchValueElement.textContent = ttsSettings.pitch.toFixed(1);
+                voicePitchElement.value = acceptedTTSSettings.pitch;
+                if (voicePitchValueElement) voicePitchValueElement.textContent = acceptedTTSSettings.pitch.toFixed(1);
             }
             if (voiceVolumeElement) {
-                voiceVolumeElement.value = ttsSettings.volume;
-                if (voiceVolumeValueElement) voiceVolumeValueElement.textContent = ttsSettings.volume.toFixed(1);
+                voiceVolumeElement.value = acceptedTTSSettings.volume;
+                if (voiceVolumeValueElement) voiceVolumeValueElement.textContent = acceptedTTSSettings.volume.toFixed(1);
             }
         }
         
@@ -644,8 +673,9 @@
             availableVoices = window.speechSynthesis.getVoices();
             if (availableVoices.length > 0) {
 // MODIFIED: Added await to populateLanguageSelector call
-                await populateLanguageSelector(); // Poblar idiomas y seleccionar el guardado/default. Esto actualiza ttsSettings.userPreferredLang.
-                populateVoiceSelector();    // Poblar voces filtradas por userPreferredLang y seleccionar la guardada/default. Esto actualiza ttsSettings.utteranceLang.
+                await populateLanguageSelector(); // Poblar idiomas y seleccionar el guardado/default. Esto actualiza acceptedTTSSettings.userPreferredLang.
+                populateVoiceSelector(acceptedTTSSettings);    // Poblar voces filtradas por userPreferredLang y seleccionar la guardada/default.
+                updateUtteranceLangFromSelection(acceptedTTSSettings); // Ensure utteranceLang is set based on accepted settings
             } else {
                 // Si las voces no están listas, onvoiceschanged se encargará
 // MODIFIED: Added await to populateLanguageSelector call (also ensures it runs if voices are initially empty)
@@ -657,7 +687,7 @@
             }
         }
 
-        function speak(text) { 
+        function speak(text, settingsToUse = acceptedTTSSettings) { // MODIFIED: Added settingsToUse parameter
             if (!('speechSynthesis' in window)) {
                 console.warn('Text-to-Speech no es soportado.');
                 alert('Tu navegador no soporta la función de voz.');
@@ -667,19 +697,19 @@
 
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.text = text;
-            utterance.lang = ttsSettings.utteranceLang; 
-            utterance.rate = ttsSettings.rate;
-            utterance.pitch = ttsSettings.pitch;
-            utterance.volume = ttsSettings.volume;
+            utterance.lang = settingsToUse.utteranceLang;
+            utterance.rate = settingsToUse.rate;
+            utterance.pitch = settingsToUse.pitch;
+            utterance.volume = settingsToUse.volume;
 
-            if (ttsSettings.selectedVoiceName) {
-                const voice = availableVoices.find(v => v.name === ttsSettings.selectedVoiceName);
+            if (settingsToUse.selectedVoiceName) {
+                const voice = availableVoices.find(v => v.name === settingsToUse.selectedVoiceName);
                 if (voice) {
                     utterance.voice = voice;
                     // Asegurar que el lang del utterance coincida con el de la voz seleccionada si es específica
                     utterance.lang = voice.lang; 
                 } else {
-                    console.warn(`Voz "${ttsSettings.selectedVoiceName}" no encontrada. Usando voz por defecto para ${ttsSettings.utteranceLang}.`);
+                    console.warn(`Voz "${settingsToUse.selectedVoiceName}" no encontrada. Usando voz por defecto para ${settingsToUse.utteranceLang}.`);
                 }
             }
             
@@ -725,7 +755,7 @@
                             this.src=`https://placehold.co/${placeholderSize}x${placeholderSize}/cccccc/969696?text=Error`;
                             this.alt = "Error al cargar imagen";
                         };
-                        img.addEventListener("click", () => speak(imgData.speech));
+                        img.addEventListener("click", () => speak(imgData.speech, acceptedTTSSettings)); // MODIFIED: Pass acceptedTTSSettings
                         columnElement.appendChild(img);
                     });
                 } else {
@@ -774,6 +804,18 @@
         }
         await initializeTTS(); // MODIFIED: Ensure initial call is awaited
             await loadFaseDataFromCSV(); // Load data after TTS init
+
+            // Function to test TTS with temporary settings
+            function testSpeak() {
+                if (!('speechSynthesis' in window)) {
+                    alert('Tu navegador no soporta la función de voz.');
+                    return;
+                }
+                // temporaryTTSSettings should be up-to-date via input/change listeners
+                console.log("Test button clicked. Speaking 'Hospital' with temporary settings:", temporaryTTSSettings);
+                speak("Hospital", temporaryTTSSettings);
+            }
+
             // Initial render for the currently active fase screen, if any
             const activeScreenElement = document.querySelector(".screen.active-screen");
             if (activeScreenElement && activeScreenElement.id.startsWith("fase-") && activeScreenElement.id.endsWith("-screen")) {
@@ -794,72 +836,92 @@
         if (optionsOverlay) optionsOverlay.addEventListener('click', () => toggleOptionsMenu(false));
         if (optionsMenu) optionsMenu.addEventListener('click', (e) => e.stopPropagation());
 
+        if (ttsTestBtn) {
+            ttsTestBtn.addEventListener('click', testSpeak);
+        }
+
         if (voiceRateElement && voiceRateValueElement) {
             voiceRateElement.addEventListener('input', function() {
-                voiceRateValueElement.textContent = parseFloat(this.value).toFixed(1);
+                const newValue = parseFloat(this.value);
+                voiceRateValueElement.textContent = newValue.toFixed(1);
+                if (optionsMenu.classList.contains('translate-x-0')) { // If menu is open
+                    temporaryTTSSettings.rate = newValue;
+                }
             });
         }
         if (voicePitchElement && voicePitchValueElement) {
             voicePitchElement.addEventListener('input', function() {
-                voicePitchValueElement.textContent = parseFloat(this.value).toFixed(1);
+                const newValue = parseFloat(this.value);
+                voicePitchValueElement.textContent = newValue.toFixed(1);
+                if (optionsMenu.classList.contains('translate-x-0')) { // If menu is open
+                    temporaryTTSSettings.pitch = newValue;
+                }
             });
         }
         if (voiceVolumeElement && voiceVolumeValueElement) {
             voiceVolumeElement.addEventListener('input', function() {
-                voiceVolumeValueElement.textContent = parseFloat(this.value).toFixed(1);
+                const newValue = parseFloat(this.value);
+                voiceVolumeValueElement.textContent = newValue.toFixed(1);
+                if (optionsMenu.classList.contains('translate-x-0')) { // If menu is open
+                    temporaryTTSSettings.volume = newValue;
+                }
             });
         }
 
         if (ttsLanguageSelectorElement) {
             ttsLanguageSelectorElement.addEventListener('change', function() {
-                ttsSettings.userPreferredLang = this.value;
-                ttsSettings.selectedVoiceName = ""; // Resetear voz al cambiar idioma de filtro
-                populateVoiceSelector(); // Repoblar voces con el nuevo filtro
+                if (optionsMenu.classList.contains('translate-x-0')) { // If menu is open
+                    temporaryTTSSettings.userPreferredLang = this.value;
+                    temporaryTTSSettings.selectedVoiceName = "";
+                    populateVoiceSelector(temporaryTTSSettings);
+                    updateUtteranceLangFromSelection(temporaryTTSSettings);
+                } else {
+                    // This case should ideally not happen if UI updates accepted directly when menu is closed
+                    acceptedTTSSettings.userPreferredLang = this.value;
+                    acceptedTTSSettings.selectedVoiceName = "";
+                    populateVoiceSelector(acceptedTTSSettings);
+                    updateUtteranceLangFromSelection(acceptedTTSSettings);
+                }
             });
         }
-         // Listener para el selector de voz, para actualizar utteranceLang inmediatamente si es necesario
+
         if (voiceSelectorElement) {
             voiceSelectorElement.addEventListener('change', function() {
-                ttsSettings.selectedVoiceName = this.value;
-                updateUtteranceLangFromSelection(); // Actualiza ttsSettings.utteranceLang
+                if (optionsMenu.classList.contains('translate-x-0')) { // If menu is open
+                    temporaryTTSSettings.selectedVoiceName = this.value;
+                    updateUtteranceLangFromSelection(temporaryTTSSettings);
+                } else {
+                    // This case should ideally not happen
+                    acceptedTTSSettings.selectedVoiceName = this.value;
+                    updateUtteranceLangFromSelection(acceptedTTSSettings);
+                }
             });
         }
 
 
         if (applyChangesBtn) {
             applyChangesBtn.addEventListener('click', () => {
-                console.log("Apply Changes button clicked.");
-                const langPreviouslyAppliedAndSaved = localStorage.getItem('ttsUserPreferredLang');
-                console.log("Language previously applied and saved (from localStorage):", langPreviouslyAppliedAndSaved);
+                console.log("Apply Changes button clicked. Applying temporary settings to accepted settings.");
+                const langPreviouslySaved = acceptedTTSSettings.userPreferredLang; // Get current accepted before overwrite
+
+                // Apply temporary settings to accepted settings
+                acceptedTTSSettings = JSON.parse(JSON.stringify(temporaryTTSSettings));
 
                 // Apply theme immediately
                 if(themeSelector) applyTheme(themeSelector.value);
 
-                // Update ttsSettings object from form elements
-                if (ttsLanguageSelectorElement) {
-                    ttsSettings.userPreferredLang = ttsLanguageSelectorElement.value;
-                    console.log("TTS language selector new value being applied to ttsSettings.userPreferredLang:", ttsLanguageSelectorElement.value);
-                }
-                if (voiceSelectorElement) {
-                    ttsSettings.selectedVoiceName = voiceSelectorElement.value;
-                    updateUtteranceLangFromSelection();
-                }
-                if (voiceRateElement) ttsSettings.rate = parseFloat(voiceRateElement.value);
-                if (voicePitchElement) ttsSettings.pitch = parseFloat(voicePitchElement.value);
-                if (voiceVolumeElement) ttsSettings.volume = parseFloat(voiceVolumeElement.value);
+                // Save all new accepted settings to localStorage
+                localStorage.setItem('ttsUserPreferredLang', acceptedTTSSettings.userPreferredLang);
+                localStorage.setItem('ttsSelectedVoiceName', acceptedTTSSettings.selectedVoiceName);
+                localStorage.setItem('ttsUtteranceLang', acceptedTTSSettings.utteranceLang);
+                localStorage.setItem('ttsRate', acceptedTTSSettings.rate.toString());
+                localStorage.setItem('ttsPitch', acceptedTTSSettings.pitch.toString());
+                localStorage.setItem('ttsVolume', acceptedTTSSettings.volume.toString());
+                console.log("New acceptedTTSSettings.userPreferredLang saved to localStorage:", acceptedTTSSettings.userPreferredLang);
 
-                // Save all new settings to localStorage
-                localStorage.setItem('ttsUserPreferredLang', ttsSettings.userPreferredLang);
-                localStorage.setItem('ttsSelectedVoiceName', ttsSettings.selectedVoiceName);
-                localStorage.setItem('ttsUtteranceLang', ttsSettings.utteranceLang);
-                localStorage.setItem('ttsRate', ttsSettings.rate.toString());
-                localStorage.setItem('ttsPitch', ttsSettings.pitch.toString());
-                localStorage.setItem('ttsVolume', ttsSettings.volume.toString());
-                console.log("New ttsSettings.userPreferredLang saved to localStorage:", ttsSettings.userPreferredLang);
-
-                // Compare the previously saved language with the newly applied and saved language
-                if (langPreviouslyAppliedAndSaved !== ttsSettings.userPreferredLang) {
-                    console.log(`Language preference changed from ('${langPreviouslyAppliedAndSaved}' or initial page default) to '${ttsSettings.userPreferredLang}'. Reloading CSV data.`);
+                // Compare the previously accepted language with the newly accepted language
+                if (langPreviouslySaved !== acceptedTTSSettings.userPreferredLang) {
+                    console.log(`Language preference changed from '${langPreviouslySaved}' to '${acceptedTTSSettings.userPreferredLang}'. Reloading CSV data.`);
                     loadFaseDataFromCSV().then(success => {
                         if (success) {
                             const activeScreenElement = document.querySelector(".screen.active-screen");
