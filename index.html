@@ -450,48 +450,77 @@
             return lang.split('-')[0]; // Retorna la parte base, ej: "es" de "es-AR"
         }
         
-        function populateLanguageSelector() {
-            if (!ttsLanguageSelectorElement || availableVoices.length === 0) {
-                if(ttsLanguageSelectorElement) ttsLanguageSelectorElement.innerHTML = '<option value="">No hay idiomas disponibles</option>';
+        async function populateLanguageSelector() {
+            if (!ttsLanguageSelectorElement) {
+                console.warn("TTS language selector element not found.");
                 return;
             }
+            ttsLanguageSelectorElement.innerHTML = '<option value="">Cargando idiomas...</option>';
 
-            const baseLangs = [...new Set(availableVoices.map(voice => voice.lang.split('-')[0]))].sort();
-            // Usar el userPreferredLang ya cargado/inicializado para la selección
-            const currentSelectedLang = ttsSettings.userPreferredLang; 
-            
-            ttsLanguageSelectorElement.innerHTML = ''; 
-
-            if (baseLangs.length === 0) {
-                 ttsLanguageSelectorElement.innerHTML = '<option value="">No hay idiomas</option>';
-                 return;
-            }
-
-            baseLangs.forEach(langCode => {
-                const option = document.createElement('option');
-                option.value = langCode;
-                try {
-                    let displayName = langCode;
-                    // Para obtener el nombre del idioma en el propio idioma (ej. "Español" en vez de "Spanish")
-                    // se podría usar new Intl.DisplayNames([langCode], { type: 'language' }).of(langCode);
-                    // pero para una lista de idiomas, es más común mostrarlos en el idioma de la UI.
-                    // Aquí lo mostramos en el idioma del código mismo si es posible, o el código.
-                    const languageNames = new Intl.DisplayNames([langCode], { type: 'language' }); // Usar el idioma del código para el nombre
-                    displayName = languageNames.of(langCode);
-                    option.textContent = displayName.charAt(0).toUpperCase() + displayName.slice(1);
-                } catch (e) {
-                    option.textContent = langCode.toUpperCase(); 
+            try {
+                const response = await fetch("langs.csv");
+                if (!response.ok) {
+                    console.error(`Error fetching langs.csv: ${response.statusText}`);
+                    ttsLanguageSelectorElement.innerHTML = '<option value="">Error al cargar idiomas</option>';
+                    return;
                 }
-                ttsLanguageSelectorElement.appendChild(option);
-            });
-            
-            if (baseLangs.includes(currentSelectedLang)) {
-                ttsLanguageSelectorElement.value = currentSelectedLang;
-            } else if (baseLangs.length > 0) { // Si el preferido no está, seleccionar el primero de la lista
-                ttsLanguageSelectorElement.value = baseLangs[0];
+                const csvText = await response.text();
+                const lines = csvText.trim().split('\n');
+                if (lines.length < 2) { // Need header + at least one language
+                    console.error("langs.csv is empty or invalid.");
+                    ttsLanguageSelectorElement.innerHTML = '<option value="">No hay idiomas configurados</option>';
+                    return;
+                }
+
+                const headers = lines[0].split(',').map(h => h.trim());
+                const langCodeIndex = headers.indexOf("lang_code");
+                const langNameIndex = headers.indexOf("lang_name");
+
+                if (langCodeIndex === -1 || langNameIndex === -1) {
+                    console.error("langs.csv missing required headers: lang_code, lang_name");
+                    ttsLanguageSelectorElement.innerHTML = '<option value="">Error en formato de idiomas</option>';
+                    return;
+                }
+
+                let supportedLanguages = [];
+                for (let i = 1; i < lines.length; i++) {
+                    const values = lines[i].split(',');
+                    const langCode = values[langCodeIndex] ? values[langCodeIndex].trim() : "";
+                    const langName = values[langNameIndex] ? values[langNameIndex].trim() : "";
+
+                    if (langCode && langName && (langName.includes("Español") || langName.includes("English"))) {
+                        supportedLanguages.push({ code: langCode, name: langName });
+                    }
+                }
+
+                supportedLanguages.sort((a, b) => a.name.localeCompare(b.name));
+                ttsLanguageSelectorElement.innerHTML = ''; // Clear loading message
+
+                if (supportedLanguages.length === 0) {
+                    ttsLanguageSelectorElement.innerHTML = '<option value="">No hay idiomas (En/Es) configurados</option>';
+                    return;
+                }
+
+                supportedLanguages.forEach(lang => {
+                    const option = document.createElement("option");
+                    option.value = lang.code;
+                    option.textContent = lang.name;
+                    ttsLanguageSelectorElement.appendChild(option);
+                });
+
+                // Restore previously selected language if it exists in the new list
+                const currentSelectedLang = ttsSettings.userPreferredLang; // Loaded from localStorage
+                if (supportedLanguages.some(lang => lang.code === currentSelectedLang)) {
+                    ttsLanguageSelectorElement.value = currentSelectedLang;
+                } else if (supportedLanguages.length > 0) {
+                    ttsLanguageSelectorElement.value = supportedLanguages[0].code; // Select first in the filtered list
+                }
+                ttsSettings.userPreferredLang = ttsLanguageSelectorElement.value; // Update global setting
+                populateVoiceSelector(); // Refresh voice list based on newly set language
+            } catch (error) {
+                console.error("Error in populateLanguageSelector:", error);
+                ttsLanguageSelectorElement.innerHTML = '<option value="">Error al procesar idiomas</option>';
             }
-            // Actualizar ttsSettings.userPreferredLang con el valor que realmente quedó seleccionado
-            ttsSettings.userPreferredLang = ttsLanguageSelectorElement.value;
         }
 
         function populateVoiceSelector() {
@@ -580,7 +609,8 @@
             }
         }
         
-        function initializeTTS() {
+// MODIFIED: Made initializeTTS async
+        async function initializeTTS() {
             if (typeof speechSynthesis === 'undefined') {
                 console.warn("Speech Synthesis no soportado.");
                 [ttsLanguageSelectorElement, voiceSelectorElement, voiceRateElement, voicePitchElement, voiceVolumeElement].forEach(el => {
@@ -595,11 +625,16 @@
 
             availableVoices = window.speechSynthesis.getVoices();
             if (availableVoices.length > 0) {
-                populateLanguageSelector(); // Poblar idiomas y seleccionar el guardado/default. Esto actualiza ttsSettings.userPreferredLang.
+// MODIFIED: Added await to populateLanguageSelector call
+                await populateLanguageSelector(); // Poblar idiomas y seleccionar el guardado/default. Esto actualiza ttsSettings.userPreferredLang.
                 populateVoiceSelector();    // Poblar voces filtradas por userPreferredLang y seleccionar la guardada/default. Esto actualiza ttsSettings.utteranceLang.
             } else {
                 // Si las voces no están listas, onvoiceschanged se encargará
-                if(ttsLanguageSelectorElement) ttsLanguageSelectorElement.innerHTML = '<option value="">Cargando idiomas...</option>';
+// MODIFIED: Added await to populateLanguageSelector call (also ensures it runs if voices are initially empty)
+                await populateLanguageSelector();
+                if(ttsLanguageSelectorElement && !ttsLanguageSelectorElement.firstChild) { // Check if it's still empty after await
+                   ttsLanguageSelectorElement.innerHTML = '<option value="">Cargando idiomas...</option>'; // Fallback if langs.csv also failed
+                }
                 if(voiceSelectorElement) voiceSelectorElement.innerHTML = '<option value="">Cargando voces...</option>';
             }
         }
@@ -708,9 +743,18 @@
 
         // Inicializar TTS
         if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
-            speechSynthesis.onvoiceschanged = initializeTTS;
+            // MODIFIED: onvoiceschanged handler to manage async initializeTTS
+            let initCalledByEvent = false; // Basic guard against multiple rapid fires
+            speechSynthesis.onvoiceschanged = async () => {
+                if (!initCalledByEvent) {
+                    initCalledByEvent = true;
+                    console.log("onvoiceschanged event fired. Calling initializeTTS asynchronously.");
+                    await initializeTTS();
+                    // Consider resetting initCalledByEvent after a delay if needed, or if initializeTTS handles its own state.
+                }
+            };
         }
-        initializeTTS();
+        await initializeTTS(); // MODIFIED: Ensure initial call is awaited
             await loadFaseDataFromCSV(); // Load data after TTS init
             // Initial render for the currently active fase screen, if any
             const activeScreenElement = document.querySelector(".screen.active-screen");
