@@ -84,6 +84,13 @@
        debería funcionar bien dentro de .active-screen (que tiene overflow:hidden).
        El main de Fase 1 usará flex-grow para ocupar el espacio restante tras el header.
     */
+
+    /* ---- DIAGNOSTIC: Force light theme on body when html is not .dark ---- */
+    html:not(.dark) body {
+        background-color: #F3F4F6 !important; /* Tailwind gray-100 */
+        color: #111827 !important; /* Tailwind gray-900 */
+    }
+
 </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans transition-colors duration-300">
