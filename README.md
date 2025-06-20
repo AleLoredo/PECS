@@ -2,8 +2,14 @@
 
 ## Overall Description
 
-PECS for Luka is a Progressive Web App (PWA) designed as an augmentative and alternative communication (AAC) tool. Inspired by the Picture Exchange Communication System (PECS), this application provides a phased approach to adress the needs of children like Luka and to help them communicate using images. It's built to be interactive, customizable, accessible across various devices and capable of working offline making use of build in Text to Speech engines present in modern devices.
-
+PECS for Luka is an augmentative and alternative communication (AAC) built to be a free, interactive, customizable, lightweight, reliable tool for kids with a language expresssion disorder.
+Designed as a Progressive Web App (PWA) it can be downloaded with a single click on any touchscreen handheld that has a modern browser and continue to be used even without an active internet connection by making use of build in Text to Speech engines present in modern devices.
+PECS for Luka allows for operation in both english and spanish, and the customization of all voice settings suchs as: 
+- Speed of speech
+- Pitch
+- Volume
+The app also includes a dark mode setting to reduce potential eye strain.
+PECS provides an audio-visual-tactile interactive experience with content organized in a phased approach to adress the needs of children like Luka and to help them communicate using images and sound. 
 ## Key Features
 
 *   **Phased Interface**: Communication elements are organized into six distinct phases. Each phase can display images in multiple columns, allowing for a structured learning or communication progression.
